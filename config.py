@@ -7,6 +7,14 @@ GREC_JSON_DIR = "%s/json" % GREC_DIR
 GREC_RDF_DIR = "%s/rdf" % GREC_DIR
 GREC_GRAPH_DIR = "%s/graph" % GREC_DIR
 
+# ---------------------- GRAPHS ----------------------
+CORPUS_GRAPH_SM = "%s/corpus_graph-full.pkl" % GREC_GRAPH_DIR # More aggressive subgraph stitching method
+
+# ---------------------- EMBEDDINGS ----------------------
+N2V_DIR = "%s/node2vec" % GREC_DIR
+N2V_MODEL = "%s/models" % N2V_DIR
+N2V_EMBEDDING = "%s/embeddings" % N2V_DIR
+N2V_TEMP = "%s/temp" % N2V_DIR
 
 # ---------------------- API Keys ----------------------
 API_KEYS = "%s/api_keys" % DATA_PATH

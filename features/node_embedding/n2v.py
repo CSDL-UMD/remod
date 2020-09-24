@@ -1,6 +1,5 @@
-#!/usr/bin/python3
 '''
-Run node2vec
+Run SNAP implementation of Node2Vec
 '''
 
 import os
@@ -8,173 +7,91 @@ import networkx as nx
 import pickle
 import datetime
 import logging
-import argparse
+from typing import Type
 from node2vec import Node2Vec
+from ...utils.file import directory_check, generate_out_file
 
-def arg_parse(arg_list=None):
-    parser = argparse.ArgumentParser(description="Run Node2Vec on a given pickled graph")
-    now = datetime.datetime.now().strftime("%b-%d-%y")
+def n2v_init(dimensions: int, walk_length: int, num_walks: int, p: float, q: float, workers: int, temp_folder: str, **extras) -> dict:
+    """Generates dictionary for initializing Node2Vec Model
 
-    parser.add_argument(
-        '--dimensions',
-        '-d',
-        dest='dims',
-        type=int,
-        default=128,
-        help="The number of dimensions for embedded vectors, default 128"
-    )
+    Args:
+        dimensions (int): Number of dimensions for embedding
+        walk_length (int): Length of random walks to be generated
+        num_walks (int): Number of walks to generate per node
+        p (float): The return parameter (likelyhood of returning to previously visited node)
+        q (float): The In-Out parameter (likelyhood of visiting unexplored node)
+        workers (int): Number of workers
+        temp_folder (str): Folder for storing temporary checkpoints
+        **extras (dict): Extra keywords (to be ignored)
 
-    parser.add_argument(
-        '--walk-length',
-        '-wl',
-        dest='walk_length',
-        type=int,
-        default=50,
-        help="The length of randomly generated walks, default 50"
-    )
+    Returns:
+        dict: Dictionary that can be passed to Node2Vec
+    """
 
-    parser.add_argument(
-        '--num-walks',
-        '-nw',
-        dest='num_walks',
-        type=int,
-        default=50,
-        help="The number of randomly generated walks per node, default 50"
-    )
-
-    parser.add_argument(
-        '--return',
-        '-p',
-        dest='p_return',
-        type=float,
-        default=1,
-        help="The return parameter - likelyhood to return to already visited node when generating walks, default 1"
-    )
-
-    parser.add_argument(
-        '--in-out',
-        '-q',
-        dest='q_in_out',
-        type=float,
-        default=1,
-        help="The in-out parameter - likelyhood to explore an unvisited node when generating walks, default 1"
-    )
-
-    parser.add_argument(
-        '--workers',
-        '-w',
-        dest='workers',
-        type=int,
-        default=4,
-        help="The number of cores to use, default 4"
-    )
-
-    parser.add_argument(
-        '--window',
-        '-win',
-        dest='window',
-        type=int,
-        default=25,
-        help="The size of the skipgram window, default 25"
-    )
-
-    parser.add_argument(
-        '--min-count',
-        '-mc',
-        dest='min_count',
-        type=int,
-        default=1,
-        help="The max frequency of words to be included, default 1"
-    )
-
-    parser.add_argument(
-        '--undirected',
-        '-undir',
-        dest='undirected',
-        action='store_true',
-        default=False,
-        help="Process the graph as an undirected graph, default False"
-    )
-
-    parser.add_argument(
-        '--in-graph',
-        '-in',
-        dest='in_graph',
-        type=str,
-        default=None,
-        help="Set input graph, default None"
-    )
-
-    parser.add_argument(
-        '--out-dir',
-        '-out',
-        dest='out_dir',
-        type=str,
-        default=None,
-        help="Set output directory, default None"
-    )
-
-    parser.add_argument(
-        '--experiment-tag',
-        '-tag',
-        dest="exp_tag",
-        type=str,
-        default=now,
-        help="Set a unique tag for output files from this experiment, default MM-DD-YY"
-    )
-
-    if arg_list:
-        return parser.parse_args(args=arg_list)
-    else:
-        return parser.parse_args()
-
-def main():
-    
-    ### Initialize Logger ###
-    logging.basicConfig(
-        format="%(asctime)s;%(levelname)s;%(message)s",
-        # datefmt="%H:%M:%S",
-        level=logging.INFO
-    )
-
-    #########################
-
-    ### Args ###
-    args = arg_parse()
-
-    in_graph = args.in_graph
-    out_dir = args.out_dir
-    exp_tag = args.exp_tag
-    undirected = args.undirected
-
-    node2vec_init = {
-        'dimensions'   : args.dims,
-        'walk_length'  : args.walk_length,   # max nodes in a relation * 2 = 200
-        'num_walks'    : args.num_walks,
-        'p'            : args.p_return,   # lower to encourage graph exploration
-        'q'            : args.q_in_out,
-        'workers'      : args.workers,
-        'temp_folder'  : out_dir + 'temp/'
+    d = {
+        'dimensions'   : dimensions,
+        'walk_length'  : walk_length,
+        'num_walks'    : num_walks,
+        'p'            : p,
+        'q'            : q,
+        'workers'      : workers,
+        'temp_folder'  : temp_folder
     }
 
-    node2vec_fit = {
-        'window'      : args.window,    # half of max nodes
-        'min_count'   : args.min_count,
-        # 'batch_words' : 4
+    return d
+
+def n2v_fit(window: int, min_count: int = 1, batch_words: int = 1, **extras) -> dict:
+    """Returns parameters for Word2Vec fitting of Node2Vec Model
+
+    Args:
+        window (int): Size of context window
+        min_count (int, optional): How many times a node must be present to be included. Defaults to 1.
+        batch_words (int, optional): How many nodes to read in as batch. Defaults to 1.
+
+    Returns:
+        dict: A dictionary for passing to node2vec.fit()
+    """
+
+    d = {
+        'window'      : window,
+        'min_count'   : min_count,
+        'batch_words' : batch_words
     }
 
-    ############
+    return d
 
-    logging.info("Beginning node2vec script")
-    logging.info("File: %s" % in_graph)
+def n2v(graph: str, output_dir: str, directed: bool, tag: str, params: dict) -> None:
+    """Runs the SNAP implementation of Node2Vec on a NetworkX graph
+
+    Args:
+        graph (str): Path to a pickled NetworkX Graph
+        output_dir (str): The directory that will save Node2Vec Model.
+        directed (bool): If True, process as directed graph
+        tag (str): The tag that will be appended to output files, useful for IDing 
+        params (dict): Dictionary of Node2Vec/Word2Vec Parameters
+    """
+
+    # Ensure directories exist
+    directory_check(output_dir)
+    directory_check(output_dir + '/models')
+    directory_check(output_dir + '/embeddings')
+    temp_dir = output_dir + '/temp'
+    directory_check(temp_dir)
+   
+    node2vec_init = n2v_init(temp_folder=temp_dir, **params)
+    node2vec_fit = n2v_fit(**params)
+
+   
+    print("Beginning node2vec script")
+    print("Graph: %s" % graph)
     for key, value in node2vec_init.items():
-        logging.info("%s: %s" %(key, value))
+        print("%s: %s" %(key, value))
     for key, value in node2vec_fit.items():
-        logging.info("%s: %s" %(key, value))
+        print("%s: %s" %(key, value))
 
-    G = nx.read_gpickle(in_graph)
+    G = nx.read_gpickle(graph)
 
-    if undirected:
+    if not directed:
         G = G.to_undirected()
 
     try:
@@ -184,18 +101,18 @@ def main():
         logging.error("Failed to run Node2Vec on Graph")
         logging.error(e.__doc__)
 
-    embedding_file = generate_out_file('embeddings.pkl', out_dir + 'embeddings/', exp_tag)
-    model_file = generate_out_file('model.pkl', out_dir + 'models/', exp_tag)
+    embedding_file = generate_out_file('embeddings.pkl', output_dir + 'embeddings/', tag)
+    model_file = generate_out_file('model.pkl', output_dir + 'models/', tag)
 
     # Save embeddings
     model.wv.save_word2vec_format(embedding_file)
-    logging.info("Embeddings saved to %s" % embedding_file)
+    print("Embeddings saved to %s" % embedding_file)
 
     # Save model
     model.save(model_file)
-    logging.info("Model saved to %s" % embedding_file)
+    print("Model saved to %s" % model_file)
 
-    logging.info("Completed Node2Vec.py")
+    print("Completed n2v.py")
 
 if __name__ == "__main__":
-    main()
+    # TODO, build this out

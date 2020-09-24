@@ -5,6 +5,8 @@ Generate embeddings for corpus graph nodes
 '''
 
 import argparse
+import datetime
+from src.features.node_embedding import n2v, nodevectors
 
 def arg_parse(arg_list=None):
     parser = argparse.ArgumentParser(description="Run Node2Vec on a given pickled graph")
@@ -21,7 +23,7 @@ def arg_parse(arg_list=None):
     parser.add_argument(
         '--dimensions',
         '-d',
-        dest='dims',
+        dest='dimensions',
         type=int,
         default=128,
         help="The number of dimensions for embedded vectors, default 128"
@@ -48,7 +50,7 @@ def arg_parse(arg_list=None):
     parser.add_argument(
         '--return',
         '-p',
-        dest='p_return',
+        dest='p',
         type=float,
         default=1,
         help="The return parameter - likelyhood to return to already visited node when generating walks, default 1"
@@ -57,7 +59,7 @@ def arg_parse(arg_list=None):
     parser.add_argument(
         '--in-out',
         '-q',
-        dest='q_in_out',
+        dest='q',
         type=float,
         default=1,
         help="The in-out parameter - likelyhood to explore an unvisited node when generating walks, default 1"
@@ -91,12 +93,12 @@ def arg_parse(arg_list=None):
     )
 
     parser.add_argument(
-        '--undirected',
-        '-undir',
-        dest='undirected',
+        '--directed',
+        '-di',
+        dest='directed',
         action='store_true',
         default=False,
-        help="Process the graph as an undirected graph, default False"
+        help="Process the graph as an directed graph, default False"
     )
 
     parser.add_argument(
@@ -104,8 +106,8 @@ def arg_parse(arg_list=None):
         '-in',
         dest='in_graph',
         type=str,
-        default=None,
-        help="Set input graph, default None"
+        default=config.CORPUS_GRAPH_SM,
+        help=f"Set input graph, default {config.CORPUS_GRAPH_SM}"
     )
 
     parser.add_argument(
@@ -113,8 +115,8 @@ def arg_parse(arg_list=None):
         '-out',
         dest='out_dir',
         type=str,
-        default=None,
-        help="Set output directory, default None"
+        default=config.N2V_DIR,
+        help=f"Set output directory, default {config.N2V_DIR}"
     )
 
     parser.add_argument(
@@ -123,10 +125,27 @@ def arg_parse(arg_list=None):
         dest="exp_tag",
         type=str,
         default=now,
-        help="Set a unique tag for output files from this experiment, default MM-DD-YY"
+        help="Set a unique tag for output files from this experiment, default d<dims>-wl<wl>-nw<nw>-win<win>-p<p>-q<q>-MM-DD-YY"
     )
 
     if arg_list:
         return parser.parse_args(args=arg_list)
     else:
         return parser.parse_args()
+
+if __name__ == "__main__":
+    args = arg_parse()
+    tag = f"d{args.dimensions}-wl{args.walk_length}-nw{args.num_walks}-win{args.window}-p{args.p}-q{args.q}-{args.exp_tag}"
+
+    arg_dict = vars(args)
+    arg_dict.pop('nodevectors')
+    tag = arg_dict.pop('exp_tag')
+    in_graph = arg_dict.pop('in_graph')
+    out_dir = arg_dict.pop('out_dir')
+    directed = arg_dict.pop('directed')
+
+    if args.nodevectors:
+        # RUN NODEVECTORS
+    else:
+        n2v.n2v(in_graph, out_dir, directed, tag, arg_dict)
+        print(f"Finished generating node embeddings for {in_graph}")

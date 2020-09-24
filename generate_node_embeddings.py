@@ -11,6 +11,14 @@ def arg_parse(arg_list=None):
     now = datetime.datetime.now().strftime("%b-%d-%y")
 
     parser.add_argument(
+        '--nodevectors',
+        dest='nodevectors',
+        action='store_true',
+        default=False,
+        help="Uses the nodevectors package, rather than SNAP Node2Vec"
+    )
+
+    parser.add_argument(
         '--dimensions',
         '-d',
         dest='dims',

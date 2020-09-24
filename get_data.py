@@ -27,7 +27,7 @@ def arg_parse(arg_list=None):
         dest='output_dir',
         help=f"Output Directory Path, default {config.GREC_JSON_DIR}",
         type=str,
-        default=config.GREC_DIR
+        default=config.GREC_JSON_DIR
     )
     
     # Parses and returns args

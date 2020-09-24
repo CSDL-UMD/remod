@@ -1,4 +1,4 @@
-DATA_PATH = "../data"
+DATA_PATH = "/data/mjsumpter/relation_extraction"
 
 # ---------------------- PATH ----------------------
 GREC_DIR = "%s/grec" % DATA_PATH

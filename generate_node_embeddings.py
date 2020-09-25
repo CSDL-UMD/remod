@@ -7,10 +7,11 @@ Generate embeddings for corpus graph nodes
 import argparse
 import datetime
 from src.features.node_embedding import n2v, nodevectors
+from src.utils.file import directory_check
 
 def arg_parse(arg_list=None):
     parser = argparse.ArgumentParser(description="Run Node2Vec on a given pickled graph")
-    now = datetime.datetime.now().strftime("%b-%d-%y")
+    now = datetime.datetime.now().strftime("%y%b%d")
 
     parser.add_argument(
         '--nodevectors',
@@ -102,12 +103,12 @@ def arg_parse(arg_list=None):
     )
 
     parser.add_argument(
-        '--in-graph',
-        '-in',
-        dest='in_graph',
+        '--graph_dir',
+        '-graph',
+        dest='graph_dir',
         type=str,
-        default=config.CORPUS_GRAPH_SM,
-        help=f"Set input graph, default {config.CORPUS_GRAPH_SM}"
+        default=config.GREC_GRAPH_DIR,
+        help=f"Set input graph directory, default {config.GREC_GRAPH_DIR}"
     )
 
     parser.add_argument(
@@ -120,12 +121,20 @@ def arg_parse(arg_list=None):
     )
 
     parser.add_argument(
-        '--experiment-tag',
-        '-tag',
-        dest="exp_tag",
+        '--input-tag',
+        '-itag',
+        dest="in_tag",
+        type=str,
+        help="The experiment tag for the input corpus graph"
+    )
+
+    parser.add_argument(
+        '--output-tag',
+        '-otag',
+        dest="out_tag",
         type=str,
         default=now,
-        help="Set a unique tag for output files from this experiment, default d<dims>-wl<wl>-nw<nw>-win<win>-p<p>-q<q>-MM-DD-YY"
+        help="Set a unique tag for output files from this experiment, default d<dims>-wl<wl>-nw<nw>-win<win>-p<p>-q<q>-YYMMDD"
     )
 
     if arg_list:
@@ -135,17 +144,23 @@ def arg_parse(arg_list=None):
 
 if __name__ == "__main__":
     args = arg_parse()
-    tag = f"d{args.dimensions}-wl{args.walk_length}-nw{args.num_walks}-win{args.window}-p{args.p}-q{args.q}-{args.exp_tag}"
+
+    directory_check(args.graph_dir, create=False)
+    in_graph = graph_dir + '/corpus_graph-' + itag + '.pkl'
+    itag = itag.split('-')[1]
+
+    tag = f"{itag}-d{args.dimensions}-wl{args.walk_length}-nw{args.num_walks}-win{args.window}-p{args.p}-q{args.q}-{args.out_tag}"
 
     arg_dict = vars(args)
     arg_dict.pop('nodevectors')
-    tag = arg_dict.pop('exp_tag')
-    in_graph = arg_dict.pop('in_graph')
+    arg_dict.pop('in_tag')
+    arg_dict.pop('out_tag')
+    arg_dict.pop('graph_dir')
     out_dir = arg_dict.pop('out_dir')
     directed = arg_dict.pop('directed')
 
     if args.nodevectors:
-        nodevectors.nodevec()
+        nodevectors.nodevec(in_graph, out_dir, directed, tag, arg_dict)
         print(f"Finished generating node embeddings for {in_graph}")
     else:
         n2v.n2v(in_graph, out_dir, directed, tag, arg_dict)

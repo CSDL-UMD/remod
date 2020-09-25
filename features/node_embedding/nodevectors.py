@@ -89,7 +89,7 @@ def nodevec(graph: str, output_dir: str, directed: bool, tag: str, params: dict)
     G = nx.read_gpickle(graph)
     G = uri_to_str(G)
 
-    if undirected:
+    if not directed:
         G = G.to_undirected()
 
     n2v_model = Node2Vec(**node2vec_init)

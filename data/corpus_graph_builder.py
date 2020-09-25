@@ -11,7 +11,7 @@ from utils.rdf import get_rdfGraph
 from utils.file import get_filename, generate_out_file
 from tqdm import tqdm
 
-NOW = datetime.datetime.now().strftime("%b-%d-%y")
+NOW = datetime.datetime.now().strftime("%y%b%d")
 
 def log_graph_info(id, nxg, log, state):
     """Logs number of nodes to output file

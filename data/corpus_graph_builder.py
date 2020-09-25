@@ -7,8 +7,9 @@ import datetime
 import logging
 import re
 import argparse
-from utils.rdf import get_rdfGraph
+from utils.rdf import get_rdfGraph, append_rdf_ids, remove_vn_tags
 from utils.file import get_filename, generate_out_file
+from utils.nx_helpers import collapse_fred_nodes
 from tqdm import tqdm
 
 NOW = datetime.datetime.now().strftime("%y%b%d")
@@ -29,80 +30,6 @@ def log_graph_info(id, nxg, log, state):
         else:
             f.write("%s nodes after: %d\n" %(id, num_nodes))
 
-def collapse_fred_nodes(nxg):
-    """Collapses FRED nodes that point to DBPedia or VerbNet Nodes
-
-    Arguments:
-        nxg {NetworkX Graph Object} -- Graph to be modified
-
-    Returns:
-        NetworkX Graph Object -- Modified NetworkX Graph
-    """
-    to_collapse = [] # nodes that need collapsing
-    for node in nxg.nodes():
-        if "fred" in node:
-            ontology_neighbors = []
-            for neighbor in nxg.neighbors(node):
-                if "dbpedia" in neighbor or "/vn/data/" in neighbor:
-                    ontology_neighbors.append((neighbor, node))
-            if len(ontology_neighbors) == 1:
-                # only collapse if there in one ontology neighbor, otherwise leave as is
-                to_collapse.append(ontology_neighbors[0])
-
-    new_G = nxg
-    try:
-        for node in to_collapse:
-            new_G = nx.contracted_nodes(new_G, node[0], node[1])
-    except:
-        raise
-    
-    return new_G
-
-def append_rdf_ids(rdflib_g, uid):
-    """Appends an RDF UID to all FRED nodes in RDF
-
-    Arguments:
-        rdflib_g {RdfLib Graph Object} -- Rdflib graph object to be altered
-        uid {str} -- Unique ID to be appended
-
-    Returns:
-        RdfLib Graph Object -- Altered Graph
-    """
-    for s,p,o in rdflib_g:
-        new_o = o
-        new_s = s
-        if "fred" in o:
-            new_o = o + '-' + uid
-        if "fred" in s:
-            new_s = s + '-' + uid
-    
-        rdflib_g.remove((s,p,o))
-        rdflib_g.add((new_s, p, new_o))
-    return rdflib_g
-
-def remove_vn_tags(rdflib_g):
-    """Removes VN Tags i.e http://www.ontologydesignpatterns.org/ont/vn/data/Direct <_392939>
-
-    Arguments:
-        rdflib_g {RdfLib Graph Object} -- Rdflib graph object to be altered
-
-    Returns:
-        RdfLib Graph Object -- Altered Graph
-    """
-    for s,p,o in rdflib_g:
-        new_o = o
-        new_s = s
-        if "/vn/data/" in s:
-            to_remove = re.search('_\d+', s).group(0)
-            new_s = s.replace(to_remove, "")
-            new_s = URIRef(new_s)
-        if "/vn/data/" in o:
-            to_remove = re.search('_\d+', o).group(0)
-            new_o = o.replace(to_remove, "")
-            new_o = URIRef(new_o)
-        rdflib_g.remove((s,p,o))
-        rdflib_g.add((new_s, p, new_o))
-    return rdflib_g
 
 def create_graph(rdf_dir: str, out_dir: str, fred: bool, append: bool, tag: str = NOW, existing: str = None) -> None:
     """

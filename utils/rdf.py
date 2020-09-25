@@ -2,6 +2,7 @@ import rdflib
 from .file import get_filename
 from collections import Counter
 import os
+from typing import Type
 
 def get_relations(rdf_dir: str) -> list:
     '''
@@ -76,3 +77,50 @@ def graph_meta(rdf: rdflib.Graph = None, rdf_path: str = None) -> dict:
     meta['depth'] = depth(g, meta['leaves'])             # Depth of Graph
 
     return meta
+
+def append_rdf_ids(rdflib_g: Type[rdflib.Graph] , uid: str):
+    """Appends an RDF UID to all FRED nodes in RDF
+
+    Arguments:
+        rdflib_g {RdfLib Graph Object} -- Rdflib graph object to be altered
+        uid {str} -- Unique ID to be appended
+
+    Returns:
+        RdfLib Graph Object -- Altered Graph
+    """
+    for s,p,o in rdflib_g:
+        new_o = o
+        new_s = s
+        if "fred" in o:
+            new_o = o + '-' + uid
+        if "fred" in s:
+            new_s = s + '-' + uid
+    
+        rdflib_g.remove((s,p,o))
+        rdflib_g.add((new_s, p, new_o))
+    return rdflib_g
+
+def remove_vn_tags(rdflib_g: Type[rdflib.Graph]):
+    """Removes VN Tags i.e http://www.ontologydesignpatterns.org/ont/vn/data/Direct <_392939>
+
+    Arguments:
+        rdflib_g {RdfLib Graph Object} -- Rdflib graph object to be altered
+
+    Returns:
+        RdfLib Graph Object -- Altered Graph
+    """
+    for s,p,o in rdflib_g:
+        new_o = o
+        new_s = s
+        if "/vn/data/" in s:
+            to_remove = re.search('_\d+', s).group(0)
+            new_s = s.replace(to_remove, "")
+            new_s = URIRef(new_s)
+        if "/vn/data/" in o:
+            to_remove = re.search('_\d+', o).group(0)
+            new_o = o.replace(to_remove, "")
+            new_o = URIRef(new_o)
+        rdflib_g.remove((s,p,o))
+        rdflib_g.add((new_s, p, new_o))
+    return rdflib_g
+

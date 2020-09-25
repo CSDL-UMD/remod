@@ -30,6 +30,8 @@ def collapse_fred_nodes(nxg: Type[nx.Graph]) -> Type[nx.Graph]:
     
     return new_G
 
+def node_to_str(node: Type[nx.Graph.node]) -> str:
+    return node.n3().replace('<', '').replace('>','')
 
 def uri_to_str(G: Type[nx.Graph]) -> Type[nx.Graph]:
     """When given a graph of RDF URI nodes, converts nodes from URI to str

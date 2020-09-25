@@ -6,8 +6,8 @@ Generate embeddings for corpus graph nodes
 
 import argparse
 import datetime
-from src.features.node_embedding import n2v, nodevectors
-from src.utils.file import directory_check
+from features.node_embedding import n2v, nodevectors
+from utils.file import directory_check
 
 def arg_parse(arg_list=None):
     parser = argparse.ArgumentParser(description="Run Node2Vec on a given pickled graph")

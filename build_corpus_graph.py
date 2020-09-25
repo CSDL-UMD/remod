@@ -76,12 +76,12 @@ def main(fred: bool, append_ids: bool, rdf_dir: str, out_dir: str, tag: str) -> 
     now = datetime.datetime.now().strftime("%b-%d-%y")
     print("build_corpus_graph.py")
     print("----------------------")
-    print(f"{now=}")
-    print(f"{rdf_dir=}")
-    print(f"{out_dir=}")
-    print(f"{fred=}")
-    print(f"{append_ids=}")
-    print(f"{tag=}")
+    print(f"Now: {now}")
+    print(f"RDF Dir: {rdf_dir}")
+    print(f"Output Dir: {out_dir}")
+    print(f"Keep Fred Nodes?: {fred}")
+    print(f"Stitch only on non-FRED nodes?: {append_ids}")
+    print(f"Experiment tag: {tag}")
 
     rdf_sub_dirs = [str(rdf_dir + '/' + x + '/') for x in os.listdir(rdf_dir)]
     for i, entry in enumerate(rdf_sub_dirs):

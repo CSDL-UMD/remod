@@ -57,7 +57,7 @@ def arg_parse(arg_list=None):
         dest="exp_tag",
         type=str,
         default=now,
-        help="Set a unique tag for output files from this experiment, default MM-DD-YY"
+        help="Set a unique tag for output files from this experiment, default <full/ontol>-MM-DD-YY"
     )
 
     if arg_list:
@@ -73,6 +73,9 @@ def main(fred: bool, append_ids: bool, rdf_dir: str, out_dir: str, tag: str) -> 
     append_ids: If True, append file ids to FRED nodes
     tag: a unique tag for the output files. Defaults to current time
     """
+    tag_addend = "ontol" if append_ids else "full"
+    tag = tag_addend + '-' + tag
+
     now = datetime.datetime.now().strftime("%b-%d-%y")
     print("build_corpus_graph.py")
     print("----------------------")

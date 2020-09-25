@@ -145,7 +145,8 @@ if __name__ == "__main__":
     directed = arg_dict.pop('directed')
 
     if args.nodevectors:
-        # RUN NODEVECTORS
+        nodevectors.nodevec()
+        print(f"Finished generating node embeddings for {in_graph}")
     else:
         n2v.n2v(in_graph, out_dir, directed, tag, arg_dict)
         print(f"Finished generating node embeddings for {in_graph}")

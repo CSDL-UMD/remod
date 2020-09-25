@@ -115,4 +115,4 @@ def n2v(graph: str, output_dir: str, directed: bool, tag: str, params: dict) -> 
     print("Completed n2v.py")
 
 if __name__ == "__main__":
-    # TODO, build this out
+    #TODO, build this out with CLI params

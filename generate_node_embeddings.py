@@ -26,8 +26,8 @@ def arg_parse(arg_list=None):
         '-d',
         dest='dimensions',
         type=int,
-        default=128,
-        help="The number of dimensions for embedded vectors, default 128"
+        default=256,
+        help="The number of dimensions for embedded vectors, default 256"
     )
 
     parser.add_argument(
@@ -44,8 +44,8 @@ def arg_parse(arg_list=None):
         '-nw',
         dest='num_walks',
         type=int,
-        default=50,
-        help="The number of randomly generated walks per node, default 50"
+        default=200,
+        help="The number of randomly generated walks per node, default 200"
     )
 
     parser.add_argument(
@@ -80,8 +80,8 @@ def arg_parse(arg_list=None):
         '-win',
         dest='window',
         type=int,
-        default=25,
-        help="The size of the skipgram window, default 25"
+        default=15,
+        help="The size of the skipgram window, default 15"
     )
 
     parser.add_argument(
@@ -148,8 +148,12 @@ if __name__ == "__main__":
     directory_check(args.graph_dir, create=False)
     in_graph = graph_dir + '/corpus_graph-' + itag + '.pkl'
     itag = itag.split('-')[1]
+    tag = None
 
-    tag = f"{itag}-d{args.dimensions}-wl{args.walk_length}-nw{args.num_walks}-win{args.window}-p{args.p}-q{args.q}-{args.out_tag}"
+    if args.nodevectors:
+        tag = f"{itag}-nv-d{args.dimensions}-wl{args.walk_length}-nw{args.num_walks}-win{args.window}-p{args.p}-q{args.q}-{args.out_tag}"
+    else:
+        tag = f"{itag}-d{args.dimensions}-wl{args.walk_length}-nw{args.num_walks}-win{args.window}-p{args.p}-q{args.q}-{args.out_tag}"
 
     arg_dict = vars(args)
     arg_dict.pop('nodevectors')

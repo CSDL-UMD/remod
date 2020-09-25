@@ -10,11 +10,11 @@ import pathlib
 import config
 from utils.file import directory_check
 
-GREC_URLS = ["https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/dob-augment_May-26-20.json",
-             "https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/education-augment_May-26-20.json",
-             "https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/institution-augment_May-26-20.json",
-             "https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/pob-augment_May-26-20.json",
-             "https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/pod-augment_May-26-20.json"]
+GREC_URLS = ["https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/dob_augment-200526.json",
+             "https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/education_augment-200526.json",
+             "https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/institution_augment-200526.json",
+             "https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/pob_augment-200526.json",
+             "https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/pod_augment-200526.json"]
 
 
 def arg_parse(arg_list=None):

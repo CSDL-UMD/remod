@@ -9,7 +9,9 @@ import datetime
 import logging
 from typing import Type
 from node2vec import Node2Vec
-from ...utils.file import directory_check, generate_out_file
+# TODO need to make modules so these imports work
+from utils.file import directory_check, generate_out_file
+
 
 def n2v_init(dimensions: int, walk_length: int, num_walks: int, p: float, q: float, workers: int, temp_folder: str, **extras) -> dict:
     """Generates dictionary for initializing Node2Vec Model
@@ -29,16 +31,17 @@ def n2v_init(dimensions: int, walk_length: int, num_walks: int, p: float, q: flo
     """
 
     d = {
-        'dimensions'   : dimensions,
-        'walk_length'  : walk_length,
-        'num_walks'    : num_walks,
-        'p'            : p,
-        'q'            : q,
-        'workers'      : workers,
-        'temp_folder'  : temp_folder
+        'dimensions': dimensions,
+        'walk_length': walk_length,
+        'num_walks': num_walks,
+        'p': p,
+        'q': q,
+        'workers': workers,
+        'temp_folder': temp_folder
     }
 
     return d
+
 
 def n2v_fit(window: int, min_count: int = 1, batch_words: int = 1, **extras) -> dict:
     """Returns parameters for Word2Vec fitting of Node2Vec Model
@@ -53,12 +56,13 @@ def n2v_fit(window: int, min_count: int = 1, batch_words: int = 1, **extras) -> 
     """
 
     d = {
-        'window'      : window,
-        'min_count'   : min_count,
-        'batch_words' : batch_words
+        'window': window,
+        'min_count': min_count,
+        'batch_words': batch_words
     }
 
     return d
+
 
 def n2v(graph: str, output_dir: str, directed: bool, tag: str, params: dict) -> None:
     """Runs the SNAP implementation of Node2Vec on a NetworkX graph
@@ -77,17 +81,16 @@ def n2v(graph: str, output_dir: str, directed: bool, tag: str, params: dict) -> 
     directory_check(output_dir + '/embeddings')
     temp_dir = output_dir + '/temp'
     directory_check(temp_dir)
-   
+
     node2vec_init = n2v_init(temp_folder=temp_dir, **params)
     node2vec_fit = n2v_fit(**params)
 
-   
     print("Beginning node2vec script")
     print("Graph: %s" % graph)
     for key, value in node2vec_init.items():
-        print("%s: %s" %(key, value))
+        print("%s: %s" % (key, value))
     for key, value in node2vec_fit.items():
-        print("%s: %s" %(key, value))
+        print("%s: %s" % (key, value))
 
     G = nx.read_gpickle(graph)
 
@@ -95,14 +98,15 @@ def n2v(graph: str, output_dir: str, directed: bool, tag: str, params: dict) -> 
         G = G.to_undirected()
 
     try:
-        node2vec=Node2Vec(G, **node2vec_init)
+        node2vec = Node2Vec(G, **node2vec_init)
         model = node2vec.fit(**node2vec_fit)
     except Exception as e:
         logging.error("Failed to run Node2Vec on Graph")
         logging.error(e.__doc__)
 
-    embedding_file = generate_out_file('embeddings.pkl', output_dir + 'embeddings/', tag)
-    model_file = generate_out_file('model.pkl', output_dir + 'models/', tag)
+    embedding_file = generate_out_file(
+        'embeddings.pkl', output_dir + '/embeddings', tag)
+    model_file = generate_out_file('model.pkl', output_dir + '/models', tag)
 
     # Save embeddings
     model.wv.save_word2vec_format(embedding_file)
@@ -114,5 +118,5 @@ def n2v(graph: str, output_dir: str, directed: bool, tag: str, params: dict) -> 
 
     print("Completed n2v.py")
 
-if __name__ == "__main__":
-    #TODO, build this out with CLI params
+# if __name__ == "__main__":
+#     #TODO, build this out with CLI params

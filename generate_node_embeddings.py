@@ -6,12 +6,16 @@ Generate embeddings for corpus graph nodes
 
 import argparse
 import datetime
+
+import config
 from features.node_embedding import n2v, nodevectors
 from utils.file import directory_check
 
+
 def arg_parse(arg_list=None):
-    parser = argparse.ArgumentParser(description="Run Node2Vec on a given pickled graph")
-    now = datetime.datetime.now().strftime("%y%b%d")
+    parser = argparse.ArgumentParser(
+        description="Run Node2Vec on a given pickled graph")
+    now = datetime.datetime.now().strftime("%y%m%d")
 
     parser.add_argument(
         '--nodevectors',
@@ -125,7 +129,7 @@ def arg_parse(arg_list=None):
         '-itag',
         dest="in_tag",
         type=str,
-        help="The experiment tag for the input corpus graph"
+        help="The experiment tag for the input corpus graph."
     )
 
     parser.add_argument(
@@ -142,20 +146,24 @@ def arg_parse(arg_list=None):
     else:
         return parser.parse_args()
 
+
 if __name__ == "__main__":
     args = arg_parse()
+    arg_dict = vars(args)
+    assert args.in_tag is not None, "Must provide tag for corpus graph"
 
     directory_check(args.graph_dir, create=False)
-    in_graph = graph_dir + '/corpus_graph-' + itag + '.pkl'
-    itag = itag.split('-')[1]
+    in_graph = args.graph_dir + '/corpus_graph-' + args.in_tag + '.pkl'
+    itag = args.in_tag.split('-')[0]
     tag = None
 
-    if args.nodevectors:
+    nv = arg_dict["nodevectors"]
+
+    if nv:
         tag = f"{itag}-nv-d{args.dimensions}-wl{args.walk_length}-nw{args.num_walks}-win{args.window}-p{args.p}-q{args.q}-{args.out_tag}"
     else:
         tag = f"{itag}-d{args.dimensions}-wl{args.walk_length}-nw{args.num_walks}-win{args.window}-p{args.p}-q{args.q}-{args.out_tag}"
 
-    arg_dict = vars(args)
     arg_dict.pop('nodevectors')
     arg_dict.pop('in_tag')
     arg_dict.pop('out_tag')
@@ -163,7 +171,7 @@ if __name__ == "__main__":
     out_dir = arg_dict.pop('out_dir')
     directed = arg_dict.pop('directed')
 
-    if args.nodevectors:
+    if nv:
         nodevectors.nodevec(in_graph, out_dir, directed, tag, arg_dict)
         print(f"Finished generating node embeddings for {in_graph}")
     else:

@@ -1,9 +1,8 @@
-#!/usr/bin/python3
 '''
 Calculate the shortest path between subjects and objects in GREC using corpus graph and a trained node2vec model.
 Produces a pickled dataframe
 '''
-
+###nodevectors
 import os
 import networkx as nx
 import pickle
@@ -21,175 +20,9 @@ import argparse
 import datetime
 from sklearn.metrics.pairwise import cosine_similarity
 from math import acos, pi
+from ..utils.rdf import append_rdf_ids, remove_vn_tags, get_relations
+from ..utils.nx_helpers import collapse_fred_nodes, node_to_str
 
-def arg_parse(arg_list=None):
-    parser = argparse.ArgumentParser(description="Calculate shortest paths for GREC subjects/objects")
-    now = datetime.datetime.now().strftime("%b-%d-%y")
-
-    parser.add_argument(
-        '--weighted',
-        dest='dijkstra',
-        action='store_true',
-        default=False,
-        help="Weight the edges, and compute Dijkstra's shortest path"
-    )
-
-    parser.add_argument(
-        '--directed',
-        dest='directed',
-        action='store_true',
-        default=False,
-        help="Use Directed Graph for shortest path calculations"
-    )
-
-    parser.add_argument(
-        '--n2v-model',
-        '-n2v',
-        dest="n2v_model",
-        type=str,
-        default='/data/mjsumpter/nodevectors_ontology_100wl_100nw/models/model-ontology_stitch-100wl-100nw.pkl',
-        help="Set filepath to local Node2Vec Model (.pkl), default /data/mjsumpter/nodevectors_ontology_100wl_100nw/models/model-ontology_stitch-100wl-100nw.pkl"
-    )
-
-    parser.add_argument(
-        '--grec-dir',
-        '-grec',
-        dest="grec_dir",
-        type=str,
-        default='/data/mjsumpter/grec/',
-        help="Set filepath to GREC jsons, default /data/mjsumpter/grec/"
-    )
-
-    parser.add_argument(
-        '--rdf-dir',
-        '-rdf',
-        dest="rdf_dir",
-        type=str,
-        default='/data/mjsumpter/rdfs/',
-        help="Set filepath to GREC jsons, default /data/mjsumpter/rdfs/"
-    )
-
-    parser.add_argument(
-        '--out-dir',
-        '-out',
-        dest="out_dir",
-        type=str,
-        default='/data/mjsumpter/to_be_sorted/',
-        help="Set filepath for output dataframe, default /data/mjsumpter/to_be_sorted/"
-    )
-
-    parser.add_argument(
-        '--experiment-tag',
-        '-tag',
-        dest="exp_tag",
-        type=str,
-        default=now,
-        help="Set a unique tag for output files from this experiment, default MM-DD-YY"
-    )
-
-    if arg_list:
-        return parser.parse_args(args=arg_list)
-    else:
-        return parser.parse_args()
-
-def generate_out_file(filename, dir, tag):
-    """Generates a full output path for a given file
-
-    Arguments:
-        filename {str} -- Filename with extension i.e this_graph.txt
-        dir {str} -- Directory to save file to
-        tag {str} -- Unique Experiment tag to be appended
-
-    Returns:
-        str -- Full file path
-    """
-    if not os.path.exists(dir):
-        os.makedirs(dir)
-
-    name = filename.split('.')[0]
-    extension = '.' + filename.split('.')[1]
-
-    return dir + name + '-' + tag + extension
-
-def get_rdf_id(rdf_path):
-    '''
-    Returns rdf id - i.e. /some/path/to/rdf/dob_df8a81jha.rdf -> dob_df8a81jha
-    '''
-    return re.search('[^\/]*(?=[.][a-zA-Z]+$)', rdf_path).group(0)
-
-def append_rdf_ids(rdflib_g, uid):
-    """Appends an RDF UID to all FRED nodes in RDF
-
-    Arguments:
-        rdflib_g {RdfLib Graph Object} -- Rdflib graph object to be altered
-        uid {str} -- Unique ID to be appended
-
-    Returns:
-        RdfLib Graph Object -- Altered Graph
-    """
-    for s,p,o in rdflib_g:
-        new_o = o
-        new_s = s
-        if "fred" in o:
-            new_o = o + '-' + uid
-        if "fred" in s:
-            new_s = s + '-' + uid
-    
-        rdflib_g.remove((s,p,o))
-        rdflib_g.add((new_s, p, new_o))
-    return rdflib_g
-
-def remove_vn_tags(rdflib_g):
-    """Removes VN Tags i.e http://www.ontologydesignpatterns.org/ont/vn/data/Direct <_392939>
-
-    Arguments:
-        rdflib_g {RdfLib Graph Object} -- Rdflib graph object to be altered
-
-    Returns:
-        RdfLib Graph Object -- Altered Graph
-    """
-    for s,p,o in rdflib_g:
-        new_o = o
-        new_s = s
-        if "/vn/data/" in s:
-            to_remove = re.search('_\d+', s).group(0)
-            new_s = s.replace(to_remove, "")
-            new_s = URIRef(new_s)
-        if "/vn/data/" in o:
-            to_remove = re.search('_\d+', o).group(0)
-            new_o = o.replace(to_remove, "")
-            new_o = URIRef(new_o)
-        rdflib_g.remove((s,p,o))
-        rdflib_g.add((new_s, p, new_o))
-    return rdflib_g
-
-def collapse_fred_nodes(nxg):
-    """Collapses FRED nodes that point to DBPedia or VerbNet Nodes
-
-    Arguments:
-        nxg {NetworkX Graph Object} -- Graph to be modified
-
-    Returns:
-        NetworkX Graph Object -- Modified NetworkX Graph
-    """
-    to_collapse = [] # nodes that need collapsing
-    for node in nxg.nodes():
-        if "fred" in node:
-            for neighbor in nxg.neighbors(node):
-                if "dbpedia" in neighbor or "/vn/data/" in neighbor:
-                    to_collapse.append((neighbor, node))
-
-    new_G = nxg
-    try:
-        for node in to_collapse:
-            new_G = nx.contracted_nodes(new_G, node[0], node[1])
-    except:
-        raise
-    
-    return new_G
-
-def node_to_str(node):
-    return node.n3().replace('<', '').replace('>','')
 
 def process_entity(ent_str):
     ent_str = list(map(lambda x:x.lower(), ent_str.split()))
@@ -198,12 +31,6 @@ def process_entity(ent_str):
         ent_str = [ent_str[0], ent_str[-1]]
 
     return ent_str
-
-def get_relations(rdf_dir):
-    '''
-    Returns a list of directory names (should be relations) from master directory of RDFs
-    '''
-    return [x for x in os.listdir(rdf_dir) if ".csv" not in x]
 
 def get_relation_type(json_filename):
     if "education" in json_filename:
@@ -268,15 +95,8 @@ def to_weighted_graph(nxg, n2v):
 
     return nxg
 
-def main():
-    ### Initialize Logger ###
-    logging.basicConfig(
-        format="%(asctime)s;%(levelname)s;%(message)s",
-        # datefmt="%H:%M:%S",
-        level=logging.INFO
-    )
-
-    #########################
+def generate_sp_df():
+    
 
     ### Args ###
     args = arg_parse()

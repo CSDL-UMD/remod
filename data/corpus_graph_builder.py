@@ -12,7 +12,7 @@ from utils.file import get_filename, generate_out_file
 from utils.nx_helpers import collapse_fred_nodes
 from tqdm import tqdm
 
-NOW = datetime.datetime.now().strftime("%y%b%d")
+NOW = datetime.datetime.now().strftime("%y%m%d")
 
 def log_graph_info(id, nxg, log, state):
     """Logs number of nodes to output file

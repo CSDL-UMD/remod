@@ -14,7 +14,7 @@ from utils.file import generate_out_file
 
 def arg_parse(arg_list=None):
     parser = argparse.ArgumentParser(description="Stitch RDF graphs")
-    now = datetime.datetime.now().strftime("%y%b%d")
+    now = datetime.datetime.now().strftime("%y%m%d")
     parser.add_argument(
         '--leave-fred-nodes',
         '-l',
@@ -76,7 +76,7 @@ def main(fred: bool, append_ids: bool, rdf_dir: str, out_dir: str, tag: str) -> 
     tag_addend = "ontol" if append_ids else "full"
     tag = tag_addend + '-' + tag
 
-    now = datetime.datetime.now().strftime("%y%b%d")
+    now = datetime.datetime.now().strftime("%y%m%d")
     print("build_corpus_graph.py")
     print("----------------------")
     print(f"Now: {now}")

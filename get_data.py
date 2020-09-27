@@ -3,10 +3,12 @@ Task 1
 Downloads GREC Data into a specified directory
 '''
 
-import requests
 import argparse
 import os
 import pathlib
+
+import requests
+
 import config
 from utils.file import directory_check
 
@@ -29,7 +31,7 @@ def arg_parse(arg_list=None):
         type=str,
         default=config.GREC_JSON_DIR
     )
-    
+
     # Parses and returns args
     if arg_list:
         return parser.parse_args(args=arg_list)
@@ -44,6 +46,7 @@ def save_response_content(response, destination):
         for chunk in response.iter_content(CHUNK_SIZE):
             if chunk:  # filter out keep-alive new chunks
                 f.write(chunk)
+
 
 def download_file(url, destination):
     session = requests.Session()

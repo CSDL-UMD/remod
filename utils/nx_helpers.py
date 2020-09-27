@@ -1,6 +1,7 @@
 import networkx as nx
 from typing import Type
 
+
 def collapse_fred_nodes(nxg: Type[nx.Graph]) -> Type[nx.Graph]:
     """Collapses FRED nodes that point to DBPedia or VerbNet Nodes
 
@@ -10,7 +11,7 @@ def collapse_fred_nodes(nxg: Type[nx.Graph]) -> Type[nx.Graph]:
     Returns:
         NetworkX Graph Object -- Modified NetworkX Graph
     """
-    to_collapse = [] # nodes that need collapsing
+    to_collapse = []  # nodes that need collapsing
     for node in nxg.nodes():
         if "fred" in node:
             ontology_neighbors = []
@@ -27,11 +28,16 @@ def collapse_fred_nodes(nxg: Type[nx.Graph]) -> Type[nx.Graph]:
             new_G = nx.contracted_nodes(new_G, node[0], node[1])
     except:
         raise
-    
+
     return new_G
 
-def node_to_str(node: Type[nx.Graph.node]) -> str:
-    return node.n3().replace('<', '').replace('>','')
+
+def node_to_str(node) -> str:
+    '''
+    node: NetworkX node object
+    '''
+    return node.n3().replace('<', '').replace('>', '')
+
 
 def uri_to_str(G: Type[nx.Graph]) -> Type[nx.Graph]:
     """When given a graph of RDF URI nodes, converts nodes from URI to str

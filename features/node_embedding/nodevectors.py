@@ -10,10 +10,10 @@ import datetime
 import logging
 from typing import Type
 from nodevectors import Node2Vec
-from ...utils.nx_helpers import uri_to_str
-from ...utils.file import generate_out_file, directory_check
+from utils.nx_helpers import uri_to_str
+from utils.file import generate_out_file, directory_check #TODO need to make modules so these imports work
 
-def get_w2vparams(window: int, negative: int = 10, min_count: int = 1, iter: int = 10, batch_words: int = 1 **extras) -> dict:
+def get_w2vparams(window: int, negative: int = 10, min_count: int = 1, iter: int = 10, batch_words: int = 1, **extras) -> dict:
     """Get w2v paramater dictionary. Ignores extras
 
     Args:
@@ -108,5 +108,5 @@ def nodevec(graph: str, output_dir: str, directed: bool, tag: str, params: dict)
 
     print("Completed nodevectors.py")
 
-if __name__ == "__main__":
-    #TODO, build this out with CLI params
+# if __name__ == "__main__":
+#     #TODO, build this out with CLI params

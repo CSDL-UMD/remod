@@ -95,8 +95,8 @@ def nodevec(graph: str, output_dir: str, directed: bool, tag: str, params: dict)
     n2v_model = Node2Vec(**node2vec_init)
     n2v_model.fit(G)
 
-    embedding_file = generate_out_file('embeddings.pkl', out_dir + 'embeddings/', tag)
-    model_file = generate_out_file('model.pkl', out_dir + 'models/', tag)
+    embedding_file = generate_out_file('nodevectors_embeddings.pkl', out_dir + 'embeddings/', tag)
+    model_file = generate_out_file('nodevectors_model.pkl', out_dir + 'models/', tag)
 
     # Save embeddings
     n2v_model.model.wv.save_word2vec_format(embedding_file)

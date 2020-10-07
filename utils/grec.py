@@ -27,6 +27,7 @@ def get_metrics(json_file: str, relation: str=None, range: float=0.5) -> dict:
     snip_lengths = list()
     with open(json_file) as f:
         relations = json.loads(f.read())
+        metrics['num_relations'] = len(relations)
 
         for relation in relations:
             for evidence in relation['evidences']:

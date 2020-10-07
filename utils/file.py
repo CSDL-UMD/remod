@@ -71,3 +71,15 @@ def generate_out_file(filename, dir, tag):
 
     return dir + "/" + name + "-" + tag + extension
 
+def get_experiment_tag(filename: str) -> str:
+    """Return trailing experiment tag. i.e. model-full-d256-wl50-nw200-win15-p4.0-q4.0-200930.pkl returns full-d256-wl50-nw200-win15-p4.0-q4.0-200930
+
+    Args:
+        filename (str): RESOGE filepath
+
+    Returns:
+        str: The experimental tag associated with filename
+    """
+
+    name = get_filename(filename)
+    return ('-').join(name.split('-')[1:-1])

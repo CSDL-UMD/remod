@@ -57,4 +57,4 @@ def json_relation_tag(json_file: str) -> str:
     """
     Given absolute path to json_file, returns the relation
     """
-    return json_file.split("/")[-1].split("-")[0]
+    return json_file.split("/")[-1].split("-")[0].split("_")[0]

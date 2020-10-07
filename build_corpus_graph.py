@@ -78,7 +78,7 @@ def main(fred: bool, append_ids: bool, rdf_dir: str, out_dir: str, tag: str) -> 
     tag_addend = "ontol" if append_ids else "full"
     tag = tag_addend + "-" + tag
 
-    now = datetime.datetime.now().strftime("%y%m%d")
+    now = datetime.datetime.now()
     print("build_corpus_graph.py")
     print("----------------------")
     print(f"Now: {now}")
@@ -97,7 +97,9 @@ def main(fred: bool, append_ids: bool, rdf_dir: str, out_dir: str, tag: str) -> 
             existing_graph = generate_out_file("corpus_graph.pkl", out_dir, tag)
             create_graph(entry, out_dir, fred, append_ids, tag, existing=existing_graph)
 
+    now = datetime.datetime.now()
     print(f"Finished creating corpus graph {existing_graph}")
+    print(now)
 
 
 if __name__ == "__main__":

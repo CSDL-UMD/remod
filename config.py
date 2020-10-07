@@ -18,7 +18,6 @@ N2V_TEMP = "%s/temp" % N2V_DIR
 
 # ---------------------- SHORTEST PATHS (FEATURES) ----------------------
 SP_DIR = "%s/shortest_path" % GREC_DIR
-SP_FULL = "%s/"
 
 # ---------------------- API Keys ----------------------
 API_KEYS = "%s/api_keys" % DATA_PATH

@@ -1,10 +1,10 @@
-'''
+"""
 Task 2
 
 Read in all snippets from GREC. Calculate average number of words and collect snippets within 1 std.dev.
 
 Pass snippets to FRED to generate RDF graphs
-'''
+"""
 
 import argparse
 import os
@@ -15,40 +15,42 @@ from data.fred.fred_extraction import generate_rdfs
 import config
 import json
 
+
 def arg_parse(arg_list=None):
     parser = argparse.ArgumentParser(
-        description="Generate FRED RDFs from GREC snippets")
+        description="Generate FRED RDFs from GREC snippets"
+    )
     parser.add_argument(
-        '--api-method',
-        '-api',
-        dest='api',
+        "--api-method",
+        "-api",
+        dest="api",
         help="The method for API calls, default 'limited'",
         type=str,
-        default='limited'
+        default="limited",
     )
     parser.add_argument(
-        '--api-key',
-        '-key',
-        dest='api_key',
+        "--api-key",
+        "-key",
+        dest="api_key",
         help=f"The filepath for the API key, default {config.FRED_LMTD}",
         type=str,
-        default=config.FRED_LMTD
+        default=config.FRED_LMTD,
     )
     parser.add_argument(
-        '--grec-dir',
-        '-grec',
-        dest='grec',
+        "--grec-dir",
+        "-grec",
+        dest="grec",
         help=f"The directory path for the GREC, default {config.GREC_JSON_DIR}",
         type=str,
-        default=config.GREC_JSON_DIR
+        default=config.GREC_JSON_DIR,
     )
     parser.add_argument(
-        '--rdf-dir',
-        '-rdf',
-        dest='rdf',
-        help=f'The directory to save the RDFs to, default {config.GREC_RDF_DIR}',
+        "--rdf-dir",
+        "-rdf",
+        dest="rdf",
+        help=f"The directory to save the RDFs to, default {config.GREC_RDF_DIR}",
         type=str,
-        default=config.GREC_RDF_DIR
+        default=config.GREC_RDF_DIR,
     )
     # Parses and returns args
     if arg_list:
@@ -60,17 +62,17 @@ def arg_parse(arg_list=None):
 def main(api_method, api_key_file, grec_dir, rdf_dir):
 
     grec_files = absolute_paths(grec_dir)
-  
+
     for j_file in grec_files:
 
         # get metrics for excluding outlier snippets
         metrics = get_metrics(j_file)
-        max = metrics['max_no_outlier']
-        min = metrics['min_no_outlier']
+        max = metrics["max_no_outlier"]
+        min = metrics["min_no_outlier"]
         relation = json_relation_tag(j_file)
 
         # Create relation-labelled directory for storing rdfs
-        out_dir = rdf_dir + '/' + relation + '/'
+        out_dir = rdf_dir + "/" + relation + "/"
 
         print(f"\nBeginning parsing GREC file: {j_file}\n")
         print(f"Excluding snippets with over {max} words, and under {min} words")
@@ -83,10 +85,12 @@ def main(api_method, api_key_file, grec_dir, rdf_dir):
         #   Load dictionary
         snips = dict()
         for relation in relations:
-            uid = relation['UID']
+            uid = relation["UID"]
             snippet = get_snippet(relation)
             len_snip = len(snippet.split())
-            if len_snip > max or len_snip < min:   # if number of words in snippet is outlier, do not include
+            if (
+                len_snip > max or len_snip < min
+            ):  # if number of words in snippet is outlier, do not include
                 continue
             else:
                 snips[uid] = snippet
@@ -94,7 +98,7 @@ def main(api_method, api_key_file, grec_dir, rdf_dir):
         generate_rdfs(api_key_file, snips, out_dir, api_method)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = arg_parse()
 
     api_method = args.api

@@ -11,7 +11,7 @@ import logging
 from typing import Type
 from nodevectors import Node2Vec
 from utils.nx_helpers import uri_to_str
-from utils.file import generate_out_file, directory_check #TODO need to make modules so these imports work
+from utils.file import generate_out_file, directory_check
 
 def get_w2vparams(window: int, negative: int = 10, min_count: int = 1, iter: int = 10, batch_words: int = 1, **extras) -> dict:
     """Get w2v paramater dictionary. Ignores extras

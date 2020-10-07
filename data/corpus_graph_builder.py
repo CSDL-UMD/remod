@@ -14,6 +14,7 @@ from tqdm import tqdm
 
 NOW = datetime.datetime.now().strftime("%y%m%d")
 
+
 def log_graph_info(id, nxg, log, state):
     """Logs number of nodes to output file
 
@@ -24,14 +25,21 @@ def log_graph_info(id, nxg, log, state):
         state {str} -- Before collapse (b), after collapse (a)
     """
     num_nodes = len(nxg.nodes)
-    with open(log, 'a+') as f:
+    with open(log, "a+") as f:
         if state == "b":
-            f.write("%s nodes before: %d\n" %(id, num_nodes))
+            f.write("%s nodes before: %d\n" % (id, num_nodes))
         else:
-            f.write("%s nodes after: %d\n" %(id, num_nodes))
+            f.write("%s nodes after: %d\n" % (id, num_nodes))
 
 
-def create_graph(rdf_dir: str, out_dir: str, fred: bool, append: bool, tag: str = NOW, existing: str = None) -> None:
+def create_graph(
+    rdf_dir: str,
+    out_dir: str,
+    fred: bool,
+    append: bool,
+    tag: str = NOW,
+    existing: str = None,
+) -> None:
     """
     rdf_dir: Directory where RDFs are located
     out_dir: Directory to output graph and log
@@ -49,7 +57,7 @@ def create_graph(rdf_dir: str, out_dir: str, fred: bool, append: bool, tag: str 
     else:
         full_graph = nx.MultiGraph()
 
-    rdf_files = [x for x in os.listdir(rdf_dir) if '.rdf' in x]
+    rdf_files = [x for x in os.listdir(rdf_dir) if ".rdf" in x]
 
     # for every rdf file
     for rdf_file in tqdm(rdf_files):
@@ -57,7 +65,7 @@ def create_graph(rdf_dir: str, out_dir: str, fred: bool, append: bool, tag: str 
         print(f"\nParsing {rdf_file}")
 
         rdf_path = rdf_dir + rdf_file
-        
+
         graph = None
         ### Parse RDF Graph
         try:
@@ -66,7 +74,7 @@ def create_graph(rdf_dir: str, out_dir: str, fred: bool, append: bool, tag: str 
             logging.error("Failed to parse: %s" % rdf_file)
             logging.error(e.__doc__)
             continue
-        
+
         # Append unique RDF ids to FRED nodes (limits how much graph is combined)
         if append:
             uid = get_filename(rdf_path)
@@ -74,7 +82,7 @@ def create_graph(rdf_dir: str, out_dir: str, fred: bool, append: bool, tag: str 
 
         # Make NetworkX Graph
         try:
-            nx_graph = rdflib_to_networkx_multidigraph(graph) # rdf ->networkx
+            nx_graph = rdflib_to_networkx_multidigraph(graph)  # rdf ->networkx
         except Exception as e:
             logging.error("Failed to parse RDF to NetworkX: %s" % rdf_file)
             logging.error(e.__doc__)
@@ -97,7 +105,7 @@ def create_graph(rdf_dir: str, out_dir: str, fred: bool, append: bool, tag: str 
             logging.error(e.__doc__)
             continue
 
-    out_graph = generate_out_file('corpus_graph.pkl', out_dir, tag)
+    out_graph = generate_out_file("corpus_graph.pkl", out_dir, tag)
     nx.write_gpickle(full_graph, out_graph)
 
     print(f"Completed appending {rdf_dir}")

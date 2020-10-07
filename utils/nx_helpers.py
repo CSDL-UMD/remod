@@ -33,10 +33,10 @@ def collapse_fred_nodes(nxg: Type[nx.Graph]) -> Type[nx.Graph]:
 
 
 def node_to_str(node) -> str:
-    '''
+    """
     node: NetworkX node object
-    '''
-    return node.n3().replace('<', '').replace('>', '')
+    """
+    return node.n3().replace("<", "").replace(">", "")
 
 
 def uri_to_str(G: Type[nx.Graph]) -> Type[nx.Graph]:

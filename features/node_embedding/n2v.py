@@ -9,7 +9,6 @@ import datetime
 import logging
 from typing import Type
 from node2vec import Node2Vec
-# TODO need to make modules so these imports work
 from utils.file import directory_check, generate_out_file
 
 

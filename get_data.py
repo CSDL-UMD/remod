@@ -1,7 +1,7 @@
-'''
+"""
 Task 1
 Downloads GREC Data into a specified directory
-'''
+"""
 
 import argparse
 import os
@@ -12,24 +12,25 @@ import requests
 import config
 from utils.file import directory_check
 
-GREC_URLS = ["https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/dob_augment-200526.json",
-             "https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/education_augment-200526.json",
-             "https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/institution_augment-200526.json",
-             "https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/pob_augment-200526.json",
-             "https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/pod_augment-200526.json"]
+GREC_URLS = [
+    "https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/dob_augment-200526.json",
+    "https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/education_augment-200526.json",
+    "https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/institution_augment-200526.json",
+    "https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/pob_augment-200526.json",
+    "https://github.com/mjsumpter/google-relation-extraction-corpus-augmented/raw/master/pod_augment-200526.json",
+]
 
 
 def arg_parse(arg_list=None):
-    parser = argparse.ArgumentParser(
-        description="Download Augmented GREC Corpus")
+    parser = argparse.ArgumentParser(description="Download Augmented GREC Corpus")
     # Save Directory
     parser.add_argument(
-        '--output-directory',
-        '-out',
-        dest='output_dir',
+        "--output-directory",
+        "-out",
+        dest="output_dir",
         help=f"Output Directory Path, default {config.GREC_JSON_DIR}",
         type=str,
-        default=config.GREC_JSON_DIR
+        default=config.GREC_JSON_DIR,
     )
 
     # Parses and returns args
@@ -51,7 +52,7 @@ def save_response_content(response, destination):
 def download_file(url, destination):
     session = requests.Session()
     response = session.get(url)
-    destination += '/' + pathlib.Path(url).name
+    destination += "/" + pathlib.Path(url).name
     save_response_content(response, destination)
 
 

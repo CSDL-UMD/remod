@@ -10,8 +10,9 @@ import datetime
 import logging
 from typing import Type
 from node2vec import Node2Vec
+import sys
+sys.path.append('RESOGE/src')
 from utils.file import directory_check, generate_out_file
-
 
 def n2v_init(
     dimensions: int,
@@ -243,7 +244,6 @@ if __name__ == "__main__":
 
     now = datetime.datetime.now().strftime("%y%m%d")
 
-    arg_dict.pop("graph_file")
     tag = arg_dict.pop("out_tag")
     tag += f"-{now}"
     out_dir = arg_dict.pop("out_dir")
@@ -253,8 +253,8 @@ if __name__ == "__main__":
     print(f"{datetime.datetime.now()}")
     print(f"Beginning Node2Vec")
     print("-" * 30)
-    print(f"In Graph: {args.graph_file}")
-    print(f"Output Dir: {args.out_dir}")
+    print(f"In Graph: {in_graph}")
+    print(f"Output Dir: {out_dir}")
     print(f"Unique Tag: {tag}")
 
     n2v(in_graph, out_dir, directed, tag, arg_dict)

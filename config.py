@@ -1,4 +1,7 @@
+import os
+
 DATA_PATH = "/data/mjsumpter/relation_extraction"
+SRC_PATH = os.path.dirname(os.path.abspath(__file__))
 
 # ---------------------- PATH ----------------------
 GREC_DIR = "%s/grec" % DATA_PATH

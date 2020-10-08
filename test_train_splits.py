@@ -134,6 +134,7 @@ if __name__ == "__main__":
     y = df[["Relation"]]
     encoder = LabelEncoder()
     encoder.fit(y)
+    np.save(f"{config.SP_SPLITS_DIR}/class_encoder.npy", encoder.classes_)
     y = encoder.transform(y)
     y = to_categorical(y)
 

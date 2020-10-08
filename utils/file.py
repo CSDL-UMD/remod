@@ -83,3 +83,14 @@ def get_experiment_tag(filename: str) -> str:
 
     name = get_filename(filename)
     return ('-').join(name.split('-')[1:-1])
+
+def remove_tag_date(tag: str) -> str:
+    """Return trailing experiment tag without date. i.e. model-full-d256-wl50-nw200-win15-p4.0-q4.0-200930.pkl returns model-full-d256-wl50-nw200-win15-p4.0-q4.0
+
+    Args:
+        tag (str): RESOGE tag
+
+    Returns:
+        str: The experimental tag without the date
+    """
+    return ('-').join(tag.split('-')[:-1])

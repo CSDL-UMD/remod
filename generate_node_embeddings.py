@@ -8,7 +8,7 @@ import argparse
 import datetime
 
 import config
-from features.node_embedding import n2v, nodevectors
+from features.node_embedding import n2v, nodevec
 from utils.file import directory_check
 
 

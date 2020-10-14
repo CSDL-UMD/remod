@@ -39,6 +39,7 @@ def get_metrics(json_file: str, relation: str = None, range: float = 0.5) -> dic
     mean = np.mean(elements, axis=0)
     std = np.std(elements, axis=0)
 
+    metrics['lengths'] = elements
     metrics["mean"] = mean
     metrics["std_dev"] = std
     metrics["max"] = max(snip_lengths)
@@ -49,6 +50,7 @@ def get_metrics(json_file: str, relation: str = None, range: float = 0.5) -> dic
 
     metrics["max_no_outlier"] = max(elements_within)
     metrics["min_no_outlier"] = min(elements_within)
+    metrics['num_relations_within'] = len(elements_within)
 
     return metrics
 

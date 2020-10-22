@@ -177,7 +177,7 @@ def generate_sp_df(
 
         # get just year if object is a date
         if relation_type == "dob":
-            obj = obj[0].split("-")[0]
+            obj = [obj[0].split("-")[0]]
         # Attempt to capture degree abbreviation: ie. Translate Master of Science into m.s
         if relation_type == "education":
             try:
@@ -200,8 +200,8 @@ def generate_sp_df(
             else:
                 nx_graph = nx.Graph(nx_graph)
         except Exception as e:
-            logging.error(f"Could not generate graphs for {uid}.")
-            logging.error(e.__doc__)
+            print(f"ERROR: Could not generate graphs for {uid}.")
+            print(e.__doc__)
             continue
 
         if weighted:
@@ -209,8 +209,8 @@ def generate_sp_df(
             try:
                 nx_graph = to_weighted_graph(nx_graph, n2v_model, nv)
             except Exception as e:
-                logging.error(f"Could not weight graph {uid}")
-                logging.error(e.__doc__)
+                print(f"ERROR: Could not weight graph {uid}")
+                print(e.__doc__)
                 continue
 
         sub_node = None
@@ -235,10 +235,10 @@ def generate_sp_df(
             else:
                 extracted = node.split("#")[-1].lower()
             if all(word in extracted for word in subj):
-                logging.info(f"Subject node: {node}")
+                print(f"Subject node: {node}")
                 sub_node = node
             if all(word in extracted for word in obj):
-                logging.info(f"Object node: {node}")
+                print(f"Object node: {node}")
                 obj_node = node
             if any(word in extracted for word in subj) and sub_node is None:
                 # more liberal - if no match for full name, try any word in name
@@ -305,7 +305,7 @@ def generate_sp_df(
 
         # if these are none, there was an error. Skip
         if vector_final is None:
-            logging.error("Issue with producing embeddings...")
+            print("ERROR: Issue with producing embeddings...")
             continue
 
         # Normalize vector

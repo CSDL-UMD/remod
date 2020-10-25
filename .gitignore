@@ -1,0 +1,13 @@
+.vscode/
+.ipynb_checkpoints/
+*.log
+*.zip
+.snakemake/
+compare/
+
+# Data directories
+*-db*
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]

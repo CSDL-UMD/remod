@@ -12,7 +12,6 @@ from utils.file import directory_check, remove_tag_date
 
 def arg_parse(arg_list=None):
     parser = argparse.ArgumentParser(description="Train Shortest Path Corpus")
-    now = datetime.datetime.now().strftime("%y%m%d")
 
     #### Model ####
 
@@ -86,15 +85,6 @@ def arg_parse(arg_list=None):
         help="The experiment tag for the input shortest path dataframe, i.e. sp_df-<tag>.pkl",
     )
 
-    parser.add_argument(
-        "--output-tag",
-        "-otag",
-        dest="out_tag",
-        type=str,
-        default=now,
-        help="Set a unique tag for output files from this experiment, default <weight(if true)>-<dir(if true)>-<input_tag>-YYMMDD",
-    )
-
     if arg_list:
         return parser.parse_args(args=arg_list)
     else:
@@ -130,6 +120,8 @@ def load_splits(dir: str, tag: str):
 
 
 if __name__ == "__main__":
+    now = datetime.datetime.now().strftime("%y%m%d")
+
     args = arg_parse()
     assert args.model_name is not None, "Must provide name of Model"
     assert args.in_tag is not None, "Must provide tag for Training Data"
@@ -143,9 +135,8 @@ if __name__ == "__main__":
         tag += 'cv-'
     if args.no_early_stopping:
         tag += 'nes-'
-    tag += f"{remove_tag_date(args.in_tag)}-{args.out_tag}"
+    tag += f"{remove_tag_date(args.in_tag)}-{now}"
 
-    now = datetime.datetime.now()
     print("train.py")
     print("-" * 30)
     print(f"Now: {now}")

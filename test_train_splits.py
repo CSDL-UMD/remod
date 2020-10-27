@@ -15,7 +15,6 @@ from utils.file import directory_check, get_experiment_tag, generate_out_file
 
 def arg_parse(arg_list=None):
     parser = argparse.ArgumentParser(description="Generate Train/Test Splits")
-    now = datetime.datetime.now().strftime("%y%m%d")
 
     #### Data Characteristics ####
 
@@ -64,23 +63,6 @@ def arg_parse(arg_list=None):
         help=f"Set filepath for splits export, default {config.SP_SPLITS_DIR}",
     )
 
-    parser.add_argument(
-        "--input-tag",
-        "-itag",
-        dest="in_tag",
-        type=str,
-        help="The experiment tag for the input shortest path dataframe, i.e. sp_df-<tag>.pkl",
-    )
-
-    parser.add_argument(
-        "--output-tag",
-        "-otag",
-        dest="out_tag",
-        type=str,
-        default=now,
-        help="Set a unique tag for output files from this experiment, default <weight(if true)>-<dir(if true)>-<input_tag>-YYMMDD",
-    )
-
     if arg_list:
         return parser.parse_args(args=arg_list)
     else:
@@ -98,20 +80,38 @@ def add_negative_samples(df):
 if __name__ == "__main__":
     args = arg_parse()
 
+    now = datetime.datetime.now().strftime("%y%m%d")
+
     directory_check(args.in_dir)
     directory_check(args.out_dir)
 
-    sp_path = "sp_df-" + args.in_tag + ".pkl"
+    # Can manually write in path to shortest path pickles, if deviating too far from standard execution
+    sp_files = [(args.in_dir + '/' + x) for x in os.listdir(args.in_dir) if x.endswith('.pkl')]
+    assert len(sp_files) <= 2, "Only a maximum of two dataframes can be processed"
+
+
     tag = ""
     if args.neg:
         tag += "neg-"
     if args.unbalanced:
         tag += "unbal-"
-    tag += get_experiment_tag(sp_path) + f"-{args.out_tag}"
+    tag += get_experiment_tag(sp_files[0]) + f"-{now}"
 
-    sp_path = args.in_dir + '/' + sp_path
+    df = None
 
-    df = pd.read_pickle(sp_path)
+    if len(sp_files) > 1:
+        # merge two dataframes
+        df1 = pd.read_pickle(sp_files[0])
+        df2 = pd.read_pickle(sp_files[1])
+        df = pd.merge(df1,df2, on=['UID', 'Maj_Vote', 'Relation'], how='inner')
+        del df1
+        del df2
+        df['Subject'] = df['Subject_x']
+        df['Object'] = df['Object_x']
+        df['Short_Path'] = df['Short_Path_x'].apply(lambda x: x.tolist()) + df['Short_Path_y'].apply(lambda x: x.tolist())
+        df = df.drop(columns=['Subject_x', 'Object_x', 'Subject_y', 'Object_y', 'Short_Path_x', 'Short_Path_y'])
+    else:
+        df = pd.read_pickle(sp_files[0])
 
     # Remove NaN Rows
     df = df.dropna(how="any")
@@ -122,14 +122,14 @@ if __name__ == "__main__":
 
     # Drop rows where the majority vote was no/skip
     df = df.loc[df["Maj_Vote"] == "yes"]
-
+    
     # Balance Classes
     if not args.unbalanced:
         df_temp = df.groupby("Relation")
         df = df_temp.apply(lambda x: x.sample(df_temp.size().min())).reset_index(
             drop=True
         )
-
+    
     # Prep Labels
     y = df[["Relation"]]
     encoder = LabelEncoder()

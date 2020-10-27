@@ -8,6 +8,7 @@ import argparse
 import config
 import os
 import datetime
+from features import sp_params
 from features.shortest_path import generate_sp_df
 from utils.file import get_experiment_tag, directory_check, generate_out_file
 from utils.grec import json_relation_tag
@@ -17,7 +18,6 @@ def arg_parse(arg_list=None):
     parser = argparse.ArgumentParser(
         description="Calculate shortest paths for GREC subjects/objects"
     )
-    now = datetime.datetime.now().strftime("%y%m%d")
 
     parser.add_argument(
         "--weighted",
@@ -72,20 +72,11 @@ def arg_parse(arg_list=None):
     )
 
     parser.add_argument(
-        "--input-tag",
-        "-itag",
-        dest="in_tag",
+        "--custom",
+        dest="custom",
         type=str,
-        help="The experiment tag for the input N2V model, i.e. model-<tag>.pkl",
-    )
-
-    parser.add_argument(
-        "--output-tag",
-        "-otag",
-        dest="out_tag",
-        type=str,
-        default=now,
-        help="Set a unique tag for output files from this experiment, default <weight(if true)>-<dir(if true)>-<input_tag>-YYMMDD",
+        default="None",
+        help="Name of features/sp_params dictionary entry. If nothing entered, defaults to best models"
     )
 
     if arg_list:
@@ -95,75 +86,92 @@ def arg_parse(arg_list=None):
 
 
 if __name__ == "__main__":
+
+    now = datetime.datetime.now().strftime("%y%m%d")
+
     args = arg_parse()
     arg_dict = vars(args)
-    assert args.in_tag is not None, "Must provide tag for node2vec model"
 
     directory_check(args.n2v_model_dir, create=False)
     directory_check(args.grec_dir, create=False)
     directory_check(args.rdf_dir, create=False)
     directory_check(args.out_dir)
 
-    n2v_model_file = args.n2v_model_dir + "/model-" + args.in_tag + ".pkl"
-    tag = ""
+    n2v_model_files = []
+    tags = None
 
-    if args.weighted:
-        tag += "weight-"
-    if args.directed:
-        tag += "dir-"
-    itag = get_experiment_tag(n2v_model_file)
-    tag += f"{itag}-{args.out_tag}"
+    if args.custom != "None":
+        tags = [sp_params.sp_param_dict[args.custom]]
+    else:
+        tags = [sp_params.sp_param_dict["struct"], sp_params.sp_param_dict["local"]]
+    
+    models = os.listdir(args.n2v_model_dir)
 
-    arg_dict.pop("n2v_model_dir")
-    arg_dict.pop("in_tag")
-    arg_dict.pop("out_tag")
+    for tag_i in tags:
+        n2v_model_file = None
+        for model in models:
+            if tag_i in model and model.endswith('.pkl'):
+                n2v_model_file = args.n2v_model_dir + '/' + model
+                n2v_model_files.append(n2v_model_file)
+                break
 
-    now = datetime.datetime.now()
-    print("build_shortest_path_df.py")
-    print("-" * 30)
-    print(f"Now: {now}")
-    print(f"N2V Model: {n2v_model_file}")
-    print(f"JSON Dir: {args.grec_dir}")
-    print(f"RDF Dir: {args.rdf_dir}")
-    print(f"Output Dir: {args.out_dir}")
-    print(f"Weighted?: {args.weighted}")
-    print(f"Directed?: {args.directed}")
-    print(f"Experiment tag: {tag}")
+        tag = ""
 
-    rdf_sub_dirs = [str(args.rdf_dir + "/" + x) for x in os.listdir(args.rdf_dir)]
-    jsons = [str(args.grec_dir + "/" + x) for x in os.listdir(args.grec_dir)]
+        if args.weighted:
+            tag += "weight-"
+        if args.directed:
+            tag += "dir-"
+        tag += f"{tag_i}-{now}"
 
-    pairs = []
-    for json in jsons:
-        for rdf_sub_dir in rdf_sub_dirs:
-            if json_relation_tag(json) in rdf_sub_dir:
-                pairs.append([json, rdf_sub_dir])
-                continue
+        arg_dict.pop("n2v_model_dir")
+        arg_dict.pop("custom")
 
-    for i, pair in enumerate(pairs):
-        json, rdf_dir = pair
-        if i == 0:
-            generate_sp_df(
-                n2v_model_file=n2v_model_file,
-                snippets=json,
-                rdf_dir=rdf_dir,
-                out_dir=args.out_dir,
-                tag=tag,
-                weighted=args.weighted,
-                directed=args.directed,
-            )
-        else:
-            existing_df = generate_out_file("sp_df.pkl", args.out_dir, tag)
-            generate_sp_df(
-                n2v_model_file=n2v_model_file,
-                snippets=json,
-                rdf_dir=rdf_dir,
-                out_dir=args.out_dir,
-                tag=tag,
-                weighted=args.weighted,
-                directed=args.directed,
-                existing=existing_df,
-            )
+        now = datetime.datetime.now()
+        print("build_shortest_path_df.py")
+        print("-" * 30)
+        print(f"Now: {now}")
+        print(f"N2V Model: {n2v_model_file}")
+        print(f"JSON Dir: {args.grec_dir}")
+        print(f"RDF Dir: {args.rdf_dir}")
+        print(f"Output Dir: {args.out_dir}")
+        print(f"Weighted?: {args.weighted}")
+        print(f"Directed?: {args.directed}")
+        print(f"Experiment tag: {tag}")
+
+        rdf_sub_dirs = [str(args.rdf_dir + "/" + x) for x in os.listdir(args.rdf_dir)]
+        jsons = [str(args.grec_dir + "/" + x) for x in os.listdir(args.grec_dir)]
+
+        pairs = []
+        for json in jsons:
+            for rdf_sub_dir in rdf_sub_dirs:
+                if json_relation_tag(json) in rdf_sub_dir:
+                    pairs.append([json, rdf_sub_dir])
+                    continue
+
+        for i, pair in enumerate(pairs):
+            json, rdf_dir = pair
+            if i == 0:
+                generate_sp_df(
+                    n2v_model_file=n2v_model_file,
+                    snippets=json,
+                    rdf_dir=rdf_dir,
+                    out_dir=args.out_dir,
+                    tag=tag,
+                    weighted=args.weighted,
+                    directed=args.directed,
+                )
+            else:
+                existing_df = generate_out_file("sp_df.pkl", args.out_dir, tag)
+                generate_sp_df(
+                    n2v_model_file=n2v_model_file,
+                    snippets=json,
+                    rdf_dir=rdf_dir,
+                    out_dir=args.out_dir,
+                    tag=tag,
+                    weighted=args.weighted,
+                    directed=args.directed,
+                    existing=existing_df,
+                )
 
 now = datetime.datetime.now()
 print(f"Finished creating shortest path dataframe {existing_df}")

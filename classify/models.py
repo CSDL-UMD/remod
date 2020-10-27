@@ -96,12 +96,13 @@ class DNN_W:
             early_stopping_monitor = EarlyStopping(patience=5)
             callbacks.append(early_stopping_monitor)
 
+        # TODO: Fix tensorboard
         # Add TensorBoard
-        log_dir = config.TRAIN_LOGS + "/" + self.tag
-        tensorboard_callback = tf.keras.callbacks.TensorBoard(
-            log_dir=log_dir, histogram_freq=1
-        )
-        callbacks.append(tensorboard_callback)
+        # log_dir = config.TRAIN_LOGS + "/" + self.tag
+        # tensorboard_callback = tf.keras.callbacks.TensorBoard(
+        #     log_dir=log_dir, histogram_freq=1
+        # )
+        # callbacks.append(tensorboard_callback)
 
         self.model.fit(
             self.X_train,

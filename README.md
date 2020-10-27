@@ -45,6 +45,8 @@ Be sure to note the corpus graph file tag, i.e. `corpus_graph-<tag>.pkl`
 python generate_node_embeddings.py -tag <corpus_graph_file_tag>
 ```
 
+## Relation Classification
+
 ### Build Shortest Path Vectors
 To build the features for the relation classification training, run:
 
@@ -66,3 +68,6 @@ The experimental tag needs to be provided. This is the tag attached to the split
 python train.py --model-name "dnn_wide" -itag <exp_tag>
 ```
 
+## Fact-checking
+### Knowledge Stream
+To fact-check the relevant claims from ClaimReview, please refer to [Knowledge Stream](https://github.com/shiralkarprashant/knowledgestream)

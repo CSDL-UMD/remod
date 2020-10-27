@@ -4,7 +4,7 @@ From the technical report: [Beyond Claim Matching: Fact-Checking Novel Claims Us
 
 The following are the instructions to strictly reproduce the results cited in the paper.
 
-![Pipeline](figures/pipeline.png)
+![Pipeline](figs/pipeline.png)
 
 ## Prerequisites
 The necessary packages can be installed as an Anaconda environment from the `environment.yml` file.

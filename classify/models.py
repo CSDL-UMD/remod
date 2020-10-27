@@ -145,15 +145,374 @@ class DNN_W:
         self.heatmap.figure.savefig(heatmap_file)
         print(f"Confusion matrix saved to {heatmap_file}")
 
+class KNN:
+    def __init__(
+        self,
+        train: tuple,
+        test: tuple,
+        out_dir: str,
+        tag: str,
+        encoder_file: str,
+        n_neighbors = 7: int
+    ):
+    
+        self.save_dir = out_dir
+        self.tag = tag
+        self.encoder = self.init_encoder(encoder_file)
+
+        self.X_train = train[0]
+        self.X_test = test[0]
+
+        self.y_train = train[1]
+        self.y_test = test[1]
+
+        self.n_neighbors = n_neighbors
+
+        self.n_classes = self.y_train.shape[1]
+        self.n_features = self.X_train.shape[1]
+        self.model = KNeighborsClassifier(n_neighbors=self.n_neighbors)
+
+
+    def init_encoder(self, filepath: str):
+        encoder = LabelEncoder()
+        encoder.classes_ = np.load(filepath, allow_pickle=True)
+        return encoder
+
+    def fit(self, save: bool = True):
+
+        self.model.fit(
+            self.X_train,
+            self.y_train
+        )
+
+        if save:
+            outfile = generate_out_file("sp_model.h5", self.save_dir, self.tag)
+            joblib.dump(self.model, outfile)
+            print(f"Model saved to {outfile}")
+
+    def predict(self):
+        self.predictions = self.model.predict(self.X_test)
+
+        self.predict_transform = self.encoder.inverse_transform(
+            self.predictions.argmax(axis=1)
+        )
+        self.y_test_transform = self.encoder.inverse_transform(
+            self.y_test.argmax(axis=1)
+        )
+
+        self.cm = metrics.confusion_matrix(
+            self.y_test_transform, self.predict_transform
+        )
+        self.classification_report = metrics.classification_report(
+            self.y_test_transform, self.predict_transform
+        )
+        self.auc = metrics.roc_auc_score(self.y_test, self.predictions)
+        self.heatmap = sns.heatmap(
+            self.cm / np.sum(self.cm), annot=True, fmt=".2%", cmap="Blues"
+        )
+
+    def report(self):
+        print(self.classification_report)
+        print(f"AUC: {self.auc}")
+        heatmap_file = generate_out_file("confusion.png", self.save_dir, self.tag)
+        self.heatmap.figure.savefig(heatmap_file)
+        print(f"Confusion matrix saved to {heatmap_file}")
+
+class Random_Forest:
+    def __init__(
+        self,
+        train: tuple,
+        test: tuple,
+        out_dir: str,
+        tag: str,
+        encoder_file: str
+    ):
+    
+        self.save_dir = out_dir
+        self.tag = tag
+        self.encoder = self.init_encoder(encoder_file)
+
+        self.X_train = train[0]
+        self.X_test = test[0]
+
+        self.y_train = train[1]
+        self.y_test = test[1]
+
+        self.n_classes = self.y_train.shape[1]
+        self.n_features = self.X_train.shape[1]
+        self.model = RandomForestClassifier()
+
+
+    def init_encoder(self, filepath: str):
+        encoder = LabelEncoder()
+        encoder.classes_ = np.load(filepath, allow_pickle=True)
+        return encoder
+
+    def fit(self, save: bool = True):
+
+        self.model.fit(
+            self.X_train,
+            self.y_train
+        )
+
+        if save:
+            outfile = generate_out_file("sp_model.h5", self.save_dir, self.tag)
+            joblib.dump(self.model, outfile)
+            print(f"Model saved to {outfile}")
+
+    def predict(self):
+        self.predictions = self.model.predict(self.X_test)
+
+        self.predict_transform = self.encoder.inverse_transform(
+            self.predictions.argmax(axis=1)
+        )
+        self.y_test_transform = self.encoder.inverse_transform(
+            self.y_test.argmax(axis=1)
+        )
+
+        self.cm = metrics.confusion_matrix(
+            self.y_test_transform, self.predict_transform
+        )
+        self.classification_report = metrics.classification_report(
+            self.y_test_transform, self.predict_transform
+        )
+        self.auc = metrics.roc_auc_score(self.y_test, self.predictions)
+        self.heatmap = sns.heatmap(
+            self.cm / np.sum(self.cm), annot=True, fmt=".2%", cmap="Blues"
+        )
+
+    def report(self):
+        print(self.classification_report)
+        print(f"AUC: {self.auc}")
+        heatmap_file = generate_out_file("confusion.png", self.save_dir, self.tag)
+        self.heatmap.figure.savefig(heatmap_file)
+        print(f"Confusion matrix saved to {heatmap_file}")
+
+class SVM:
+    def __init__(
+        self,
+        train: tuple,
+        test: tuple,
+        out_dir: str,
+        tag: str,
+        encoder_file: str,
+        kernel = 'rbf': str,
+        probability = True: bool,
+        random_state= config.RANDOM_SEED: int
+    ):
+    
+        self.save_dir = out_dir
+        self.tag = tag
+        self.encoder = self.init_encoder(encoder_file)
+
+        self.X_train = train[0]
+        self.X_test = test[0]
+
+        self.y_train = train[1]
+        self.y_test = test[1]
+
+        self.n_classes = self.y_train.shape[1]
+        self.n_features = self.X_train.shape[1]
+        self.model = OneVsRestClassifier(SVC(kernel=kernel, probability=probability, random_state=random_state))
+
+
+    def init_encoder(self, filepath: str):
+        encoder = LabelEncoder()
+        encoder.classes_ = np.load(filepath, allow_pickle=True)
+        return encoder
+
+    def fit(self, save: bool = True):
+
+        self.model.fit(
+            self.X_train,
+            self.y_train
+        )
+
+        if save:
+            outfile = generate_out_file("sp_model.h5", self.save_dir, self.tag)
+            joblib.dump(self.model, outfile)
+            print(f"Model saved to {outfile}")
+
+    def predict(self):
+        self.predictions = self.model.predict(self.X_test)
+
+        self.predict_transform = self.encoder.inverse_transform(
+            self.predictions.argmax(axis=1)
+        )
+        self.y_test_transform = self.encoder.inverse_transform(
+            self.y_test.argmax(axis=1)
+        )
+
+        self.cm = metrics.confusion_matrix(
+            self.y_test_transform, self.predict_transform
+        )
+        self.classification_report = metrics.classification_report(
+            self.y_test_transform, self.predict_transform
+        )
+        self.auc = metrics.roc_auc_score(self.y_test, self.predictions)
+        self.heatmap = sns.heatmap(
+            self.cm / np.sum(self.cm), annot=True, fmt=".2%", cmap="Blues"
+        )
+
+    def report(self):
+        print(self.classification_report)
+        print(f"AUC: {self.auc}")
+        heatmap_file = generate_out_file("confusion.png", self.save_dir, self.tag)
+        self.heatmap.figure.savefig(heatmap_file)
+        print(f"Confusion matrix saved to {heatmap_file}")
+
+class Logistic_Regression:
+    def __init__(
+        self,
+        train: tuple,
+        test: tuple,
+        out_dir: str,
+        tag: str,
+        encoder_file: str,
+        random_state = config.RANDOM_SEED: int,
+        multi_class = 'ovr': str
+    ):
+    
+        self.save_dir = out_dir
+        self.tag = tag
+        self.encoder = self.init_encoder(encoder_file)
+
+        self.X_train = train[0]
+        self.X_test = test[0]
+
+        self.y_train = train[1]
+        self.y_test = test[1]
+
+        self.n_classes = self.y_train.shape[1]
+        self.n_features = self.X_train.shape[1]
+        self.model = OneVsRestClassifier(LogisticRegression(random_state=random_state, multi_class=multi_class))
+
+
+    def init_encoder(self, filepath: str):
+        encoder = LabelEncoder()
+        encoder.classes_ = np.load(filepath, allow_pickle=True)
+        return encoder
+
+    def fit(self, save: bool = True):
+
+        self.model.fit(
+            self.X_train,
+            self.y_train
+        )
+
+        if save:
+            outfile = generate_out_file("sp_model.h5", self.save_dir, self.tag)
+            joblib.dump(self.model, outfile)
+            print(f"Model saved to {outfile}")
+
+    def predict(self):
+        self.predictions = self.model.predict(self.X_test)
+
+        self.predict_transform = self.encoder.inverse_transform(
+            self.predictions.argmax(axis=1)
+        )
+        self.y_test_transform = self.encoder.inverse_transform(
+            self.y_test.argmax(axis=1)
+        )
+
+        self.cm = metrics.confusion_matrix(
+            self.y_test_transform, self.predict_transform
+        )
+        self.classification_report = metrics.classification_report(
+            self.y_test_transform, self.predict_transform
+        )
+        self.auc = metrics.roc_auc_score(self.y_test, self.predictions)
+        self.heatmap = sns.heatmap(
+            self.cm / np.sum(self.cm), annot=True, fmt=".2%", cmap="Blues"
+        )
+
+    def report(self):
+        print(self.classification_report)
+        print(f"AUC: {self.auc}")
+        heatmap_file = generate_out_file("confusion.png", self.save_dir, self.tag)
+        self.heatmap.figure.savefig(heatmap_file)
+        print(f"Confusion matrix saved to {heatmap_file}")
+
+class Decision_Tree:
+    def __init__(
+        self,
+        train: tuple,
+        test: tuple,
+        out_dir: str,
+        tag: str,
+        encoder_file: str,
+        random_state = config.RANDOM_SEED: int,
+    ):
+    
+        self.save_dir = out_dir
+        self.tag = tag
+        self.encoder = self.init_encoder(encoder_file)
+
+        self.X_train = train[0]
+        self.X_test = test[0]
+
+        self.y_train = train[1]
+        self.y_test = test[1]
+
+        self.n_classes = self.y_train.shape[1]
+        self.n_features = self.X_train.shape[1]
+        self.model = DecisionTreeClassifier(random_state=random_state)
+
+
+    def init_encoder(self, filepath: str):
+        encoder = LabelEncoder()
+        encoder.classes_ = np.load(filepath, allow_pickle=True)
+        return encoder
+
+    def fit(self, save: bool = True):
+
+        self.model.fit(
+            self.X_train,
+            self.y_train
+        )
+
+        if save:
+            outfile = generate_out_file("sp_model.h5", self.save_dir, self.tag)
+            joblib.dump(self.model, outfile)
+            print(f"Model saved to {outfile}")
+
+    def predict(self):
+        self.predictions = self.model.predict(self.X_test)
+
+        self.predict_transform = self.encoder.inverse_transform(
+            self.predictions.argmax(axis=1)
+        )
+        self.y_test_transform = self.encoder.inverse_transform(
+            self.y_test.argmax(axis=1)
+        )
+
+        self.cm = metrics.confusion_matrix(
+            self.y_test_transform, self.predict_transform
+        )
+        self.classification_report = metrics.classification_report(
+            self.y_test_transform, self.predict_transform
+        )
+        self.auc = metrics.roc_auc_score(self.y_test, self.predictions)
+        self.heatmap = sns.heatmap(
+            self.cm / np.sum(self.cm), annot=True, fmt=".2%", cmap="Blues"
+        )
+
+    def report(self):
+        print(self.classification_report)
+        print(f"AUC: {self.auc}")
+        heatmap_file = generate_out_file("confusion.png", self.save_dir, self.tag)
+        self.heatmap.figure.savefig(heatmap_file)
+        print(f"Confusion matrix saved to {heatmap_file}")
+
 
 model_names = {
     "dnn_wide": DNN_W,
-    # "knn": knn(),
-    # "random_forest": random_forest(),
-    # "svm": svm(),
-    # "logistic_regression": logistic_regression(),
-    # "decision_tree": decision_tree(),
+    "knn": KNN,
+    "random_forest": Random_Forest,
+    "svm": SVM,
+    "logistic_regression": Logistic_Regression,
+    "decision_tree": Decision_Tree,
 }
-# TODO Is dictionary necessary?
+
 # TODO Add Cross Validation Option
 

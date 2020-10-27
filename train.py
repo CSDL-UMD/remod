@@ -92,17 +92,17 @@ def arg_parse(arg_list=None):
 
 
 def load_splits(dir: str, tag: str):
-    train_dir = dir + '/train'
-    valid_dir = dir + '/valid'
-    test_dir = dir + '/test'
+    train_dir = dir + "/train"
+    valid_dir = dir + "/valid"
+    test_dir = dir + "/test"
 
-    X_train_file = train_dir + '/X_train-' + tag + '.pkl'
-    X_valid_file = valid_dir + '/X_valid-' + tag + '.pkl'
-    X_test_file = test_dir + '/X_test-' + tag + '.pkl'
+    X_train_file = train_dir + "/X_train-" + tag + ".pkl"
+    X_valid_file = valid_dir + "/X_valid-" + tag + ".pkl"
+    X_test_file = test_dir + "/X_test-" + tag + ".pkl"
 
-    y_train_file = train_dir + '/y_train-' + tag + '.npy'
-    y_valid_file = valid_dir + '/y_valid-' + tag + '.npy'
-    y_test_file = test_dir + '/y_test-' + tag + '.npy'
+    y_train_file = train_dir + "/y_train-" + tag + ".npy"
+    y_valid_file = valid_dir + "/y_valid-" + tag + ".npy"
+    y_test_file = test_dir + "/y_test-" + tag + ".npy"
 
     X_train = pd.read_pickle(X_train_file)
     X_valid = pd.read_pickle(X_valid_file)
@@ -112,9 +112,9 @@ def load_splits(dir: str, tag: str):
     y_valid = np.load(y_valid_file)
     y_test = np.load(y_test_file)
 
-    X_train = X_train['Short_Path'].apply(pd.Series)
-    X_valid = X_valid['Short_Path'].apply(pd.Series)
-    X_test = X_test['Short_Path'].apply(pd.Series)
+    X_train = X_train["Short_Path"].apply(pd.Series)
+    X_valid = X_valid["Short_Path"].apply(pd.Series)
+    X_test = X_test["Short_Path"].apply(pd.Series)
 
     return (X_train, y_train), (X_valid, y_valid), (X_test, y_test)
 
@@ -132,9 +132,10 @@ if __name__ == "__main__":
 
     tag = f"{args.model_name}-"
     if args.cv:
-        tag += 'cv-'
+        tag += "cv-"
     if args.no_early_stopping:
-        tag += 'nes-'
+        tag += "nes-"
+    tag += f"{model_name}-"
     tag += f"{remove_tag_date(args.in_tag)}-{now}"
 
     print("train.py")
@@ -158,24 +159,45 @@ if __name__ == "__main__":
         train, valid, test = load_splits(args.in_dir + "/splits", args.in_tag)
 
         if args.model_name == "dnn_wide":
-            
+
             training_params = {
-                'epochs': args.epochs,
-                'batch_size': args.batch_size,
-                'workers': 4
+                "epochs": args.epochs,
+                "batch_size": args.batch_size,
+                "workers": 4,
             }
 
             encoder_file = args.in_dir + "/splits/class_encoder.npy"
 
             model = models.DNN_W(
-                train=train, 
-                valid= valid, 
-                test=test, 
-                training_params=training_params, 
-                out_dir=args.out_dir, 
+                train=train,
+                valid=valid,
+                test=test,
+                training_params=training_params,
+                out_dir=args.out_dir,
                 tag=tag,
-                early_stopping=early_stopping, 
-                encoder_file=encoder_file)
+                early_stopping=early_stopping,
+                encoder_file=encoder_file,
+            )
+            model.fit()
+            model.predict()
+            model.report()
+
+        else:
+
+            # merge training and validation set for sklearn algos
+            train_X = train[0].append(valid[0], ignore_index=True)
+            train_y = np.concatenate((train[1], valid[1]), axis=None)
+            train = (train_X, train_y)
+            del valid
+
+            model = models.model_names[model_name](
+                train=train,
+                test=test,
+                out_dir=args.out_dir,
+                tag=tag,
+                encoder_file=encoder_file,
+            )
+
             model.fit()
             model.predict()
             model.report()

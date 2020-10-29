@@ -99,7 +99,7 @@ def generate_sp_df(
     weighted: bool = False,
     directed: bool = False,
     existing: str = None,
-) -> None:
+) -> pd.DataFrame:
     """Generates a dataframe of shortest path vectors between two nodes.
 
     Args:
@@ -226,20 +226,30 @@ def generate_sp_df(
 
         # Find nodes that contain object and subject (Second Pass)
         for node in nx_graph.nodes():
-            extracted = None  # captures tag of ontology node, capturing its value
             if sub_node is not None and obj_node is not None:
                 # if both found, exit loop
                 break
+            extracted = None  # captures tag of ontology node, capturing its value
             if "fred" not in node:
                 extracted = node.split("/")[-1].lower()
             else:
                 extracted = node.split("#")[-1].lower()
-            if all(word in extracted for word in subj):
+            if all(word in extracted for word in subj) and sub_node is None:
                 print(f"Subject node: {node}")
                 sub_node = node
-            if all(word in extracted for word in obj):
+            if all(word in extracted for word in obj) and obj_node is None:
                 print(f"Object node: {node}")
                 obj_node = node
+
+        for node in nx_graph.nodes():
+            if sub_node is not None and obj_node is not None:
+                # if both found, exit loop
+                break
+            extracted = None  # captures tag of ontology node, capturing its value
+            if "fred" not in node:
+                extracted = node.split("/")[-1].lower()
+            else:
+                extracted = node.split("#")[-1].lower()
             if any(word in extracted for word in subj) and sub_node is None:
                 # more liberal - if no match for full name, try any word in name
                 print(f"Subject node: {node}")
@@ -256,6 +266,9 @@ def generate_sp_df(
 
         # Final pass, match any words in degree description to an object node - ie 'honorary degree' matches 'degree' or 'honorary doctorate'
         for node in nx_graph.nodes():
+            if sub_node is not None and obj_node is not None:
+                # if both found, exit loop
+                break
             extracted = None
             if "fred" not in node:
                 extracted = node.split("/")[-1].lower()
@@ -332,6 +345,7 @@ def generate_sp_df(
     print("Completed shortest_path.py execution")
     print("-" * 30)
 
+    return df
 
 if __name__ == "__main__":
     main()

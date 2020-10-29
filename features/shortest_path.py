@@ -33,13 +33,7 @@ from utils.n2v_helpers import (
 )
 
 
-def process_entity(ent_str):
-    ent_str = list(map(lambda x: x.lower(), ent_str.split()))
 
-    if len(ent_str) > 1:
-        ent_str = [ent_str[0], ent_str[-1]]
-
-    return ent_str
 
 
 def cosine_distance(x: Type[np.ndarray], y: Type[np.ndarray]) -> float:
@@ -183,7 +177,7 @@ def generate_sp_df(
             try:
                 deg_abr = f"{obj[0][0]}.{obj[-1][0]}"
                 deg_abr = deg_abr.lower()
-                print(f"Object2: {deg_abr}")
+                print(f"Object: {deg_abr}")
             except:
                 pass
 

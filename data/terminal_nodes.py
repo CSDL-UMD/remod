@@ -5,6 +5,7 @@ import pandas as pd
 import json
 from utils.rdf import append_rdf_ids, remove_vn_tags, get_rdfGraph
 from utils.file import generate_out_file
+import datetime
 
 def process_entity(ent_str):
     ent_str = list(map(lambda x: x.lower(), ent_str.split()))
@@ -164,13 +165,13 @@ def generate_terminal_node_df(snippets: str, rdf_dir: str, out_dir:str, tag:str,
 
         # get variables from grec .json
         for relation in relations:
-        if relation["UID"] == uid:
-            rating = relation["maj_vote"]
-            subj = relation["sub"]
-            obj = relation["obj"]
-            db_subj = relation["dbpedia_sub"]
-            db_obj = relation["dbpedia_obj"]
-            break
+            if relation["UID"] == uid:
+                rating = relation["maj_vote"]
+                subj = relation["sub"]
+                obj = relation["obj"]
+                db_subj = relation["dbpedia_sub"]
+                db_obj = relation["dbpedia_obj"]
+                break
 
         print(f"Processing {uid}: rating: {rating}, subject: {subj}, object: {obj}")
         

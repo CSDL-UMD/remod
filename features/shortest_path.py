@@ -33,9 +33,6 @@ from utils.n2v_helpers import (
 )
 
 
-
-
-
 def cosine_distance(x: Type[np.ndarray], y: Type[np.ndarray]) -> float:
     """Calculates cosine distance (arccos(cosine_similarity)/pi) for vectors x and y
 
@@ -89,11 +86,12 @@ def generate_sp_df(
     snippets: str,
     rdf_dir: str,
     out_dir: str,
+    node_file: str,
     tag: str,
     weighted: bool = False,
     directed: bool = False,
     existing: str = None,
-) -> None:
+) -> pd.DataFrame:
     """Generates a dataframe of shortest path vectors between two nodes.
 
     Args:
@@ -101,6 +99,7 @@ def generate_sp_df(
         snippets (str): Path to a .json containing snippets containing relations
         rdf_dir (str): Path to the directory of RDFs corresponding to the snippets
         out_dir (str): The directory that the dataframe will be written to
+        node_file (str): Path to pickled dataframe that contains terminal nodes for all relations
         tag (str): The experimental tag, to be appended to the output file name
         weighted (bool, optional): Process as weighted graph. Defaults to False.
         directed (bool, optional): Process as directed graph. Defaults to False. 
@@ -129,6 +128,9 @@ def generate_sp_df(
     rdfs = os.listdir(rdf_dir)
     relations = None
     relation_type = snippets.split("/")[-1].split("_")[0]  # very GREC specific
+
+    # load terminal nodes into <nodes> df
+    nodes_df = pd.read_pickle(node_file)
 
     # load snippets into <relations> variable
     with open(snippets, "r") as f_grec:
@@ -159,27 +161,13 @@ def generate_sp_df(
 
         print(f"Processing {uid}: rating: {rating}, subject: {subj}, object: {obj}")
 
+        sub_node = nodes_df.loc[uid]["sub"]
+        obj_node = nodes_df.loc[uid]["obj"]
+
         # if bad subject/object, skip to next rdf
-        if "needs_entry" in subj or "needs_entry" in obj:
+        if "Not Found" == sub_node or "Not Found" == obj_node:
             print(f"ERROR: Bad subject or object, skipping {uid}")
             continue
-
-        # prep for string matching
-        subj = process_entity(subj)
-        obj = process_entity(obj)
-        deg_abr = None  # this is for trying to capture "Education" degree nodes
-
-        # get just year if object is a date
-        if relation_type == "dob":
-            obj = [obj[0].split("-")[0]]
-        # Attempt to capture degree abbreviation: ie. Translate Master of Science into m.s
-        if relation_type == "education":
-            try:
-                deg_abr = f"{obj[0][0]}.{obj[-1][0]}"
-                deg_abr = deg_abr.lower()
-                print(f"Object: {deg_abr}")
-            except:
-                pass
 
         # Parse graphs, remove VN tags, collapse nodes, and undirect graph
         try:
@@ -188,7 +176,7 @@ def generate_sp_df(
             # graph = append_rdf_ids(graph, uid)
             nx_graph = rdflib_to_networkx_multidigraph(graph)
             nx_graph = collapse_fred_nodes(nx_graph)
-            nx_graph = nx_graph.to_undirected() # returns Multigraph object
+            nx_graph = nx_graph.to_undirected()  # returns Multigraph object
             if directed:
                 nx_graph = nx.DiGraph(nx_graph)
             else:
@@ -206,67 +194,6 @@ def generate_sp_df(
                 print(f"ERROR: Could not weight graph {uid}")
                 print(e.__doc__)
                 continue
-
-        sub_node = None
-        obj_node = None
-
-        #### Would like to push these three for loops into one, but priority needs to be maintained
-        # First pass through nodes - do any match db_subj or db obj?
-        for node in nx_graph.nodes():
-            if db_subj in node:
-                sub_node = db_subj
-            if db_obj in node:
-                obj_node = db_obj
-
-        # Find nodes that contain object and subject (Second Pass)
-        for node in nx_graph.nodes():
-            extracted = None  # captures tag of ontology node, capturing its value
-            if sub_node is not None and obj_node is not None:
-                # if both found, exit loop
-                break
-            if "fred" not in node:
-                extracted = node.split("/")[-1].lower()
-            else:
-                extracted = node.split("#")[-1].lower()
-            if all(word in extracted for word in subj):
-                print(f"Subject node: {node}")
-                sub_node = node
-            if all(word in extracted for word in obj):
-                print(f"Object node: {node}")
-                obj_node = node
-            if any(word in extracted for word in subj) and sub_node is None:
-                # more liberal - if no match for full name, try any word in name
-                print(f"Subject node: {node}")
-                sub_node = node
-            if any(word in extracted for word in obj) and obj_node is None:
-                # Same as above, but for logic
-                print(f"Object node: {node}")
-                obj_node = node
-            if deg_abr is not None:
-                # if "Education", try to match degree abbreviation
-                if deg_abr in extracted and obj_node is None:
-                    print(f"Object node: {node}")
-                    obj_node = node
-
-        # Final pass, match any words in degree description to an object node - ie 'honorary degree' matches 'degree' or 'honorary doctorate'
-        for node in nx_graph.nodes():
-            extracted = None
-            if "fred" not in node:
-                extracted = node.split("/")[-1].lower()
-            else:
-                extracted = node.split("#")[-1].lower()
-            if deg_abr is not None:
-                if any(word in extracted for word in obj) and obj_node is None:
-                    print(f"Object node: {node}")
-                    obj_node = node
-
-        # if subject or object could not be found, skip
-        if sub_node is None:
-            print(f"ERROR: Couldn't find subject in graph: {subj}")
-            continue
-        if obj_node is None:
-            print(f"ERROR: Couldn't find object in graph: {obj}")
-            continue
 
         # shortest path between subject and object (as a list)
         try:
@@ -325,6 +252,8 @@ def generate_sp_df(
     print(f"Shortest paths written to {out_file}")
     print("Completed shortest_path.py execution")
     print("-" * 30)
+
+    return df
 
 
 if __name__ == "__main__":

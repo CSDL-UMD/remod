@@ -6,7 +6,9 @@ import json
 from utils.rdf import append_rdf_ids, remove_vn_tags, get_rdfGraph
 from utils.file import generate_out_file
 import datetime
-
+import os
+import networkx as nx
+from utils.nx_helpers import collapse_fred_nodes
 def process_entity(ent_str):
     ent_str = list(map(lambda x: x.lower(), ent_str.split()))
 
@@ -15,13 +17,15 @@ def process_entity(ent_str):
 
     return ent_str
 
-def find_terminal_nodes(rdf_path:str, subj: str, obj:str) -> tuple:
+def find_terminal_nodes(rdf_path:str, subj: str, obj:str, db_subj:str, db_obj: str) -> tuple:
     """Find the selected terminal nodes in a provided rdf graph
 
     Args:
         rdf_path (str): Path to the rdf graph
         subj (str): string representing subject
         obj (str): string representing object
+        db_subj (str): the dbpedia node for the subject
+        db_obj (str): the dbpedia node for the object
 
     Returns:
         tuple: Returns (subject, object) nodes
@@ -52,15 +56,14 @@ def find_terminal_nodes(rdf_path:str, subj: str, obj:str) -> tuple:
 
     try:
         graph = get_rdfGraph(rdf_path)
+        graph = rdflib_to_networkx_multidigraph(graph)
+        graph = collapse_fred_nodes(graph)
+        graph = graph.to_undirected()
     except:
         return ("Not Found", "Not Found")
 
     # Build list of nodes
-    nodes = []
-    for s, o in graph.subject_objects():
-        nodes.append(str(s))
-        nodes.append(str(o))
-    nodes = list(set(nodes))
+    nodes = list(set(graph.nodes()))
     
     # First pass through nodes - do any match db_subj or db obj?
     for node in nodes:
@@ -132,6 +135,16 @@ def find_terminal_nodes(rdf_path:str, subj: str, obj:str) -> tuple:
     return (sub_node, obj_node)
 
 def generate_terminal_node_df(snippets: str, rdf_dir: str, out_dir:str, tag:str, existing: str = None):
+    """Generates a dataframe of terminal nodes for each RDF graph provided in rdf_dir
+
+    Args:
+        snippets (str): Path to json file containing snippet info
+        rdf_dir (str): Path to directory containing RDF files corresponding to snippets
+        out_dir (str): Path to directory to store dataframe
+        tag (str): A unique tag for identifying this experiment
+        existing (str, optional): Path to an existing dataframe to append new dataframe to. Defaults to None.
+    """
+
     now = datetime.datetime.now()
     print("-" * 30)
     print("Beginning generate_terminal_node_df()")
@@ -180,7 +193,7 @@ def generate_terminal_node_df(snippets: str, rdf_dir: str, out_dir:str, tag:str,
             print(f"ERROR: Bad subject or object, skipping {uid}")
             continue
 
-        term_nodes = find_terminal_nodes(rdf_path, subj, obj)
+        term_nodes = find_terminal_nodes(rdf_path, subj, obj, db_subj, db_obj)
 
         node_dict[uid] = dict()
         node_dict[uid]['sub'] = term_nodes[0]

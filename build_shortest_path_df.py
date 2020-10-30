@@ -1,5 +1,5 @@
 """
-Task 5
+Task 6
 
 Generate a dataframe of shortest path calculations
 """
@@ -69,6 +69,14 @@ def arg_parse(arg_list=None):
         type=str,
         default=config.SP_DIR,
         help=f"Set filepath for output dataframe, default {config.SP_DIR}",
+    )
+
+    parser.add_argument(
+        "--node-file",
+        dest="node_file",
+        type=str,
+        default=(config.SP_NODES + '/terminal_nodes-grec.pkl'),
+        help=f"Set filepath for terminal node dataframe, default {(config.SP_NODES + '/terminal_nodes-grec.pkl')}",
     )
 
     parser.add_argument(
@@ -156,6 +164,7 @@ if __name__ == "__main__":
                     snippets=json,
                     rdf_dir=rdf_dir,
                     out_dir=args.out_dir,
+                    node_file=args.node_file,
                     tag=tag,
                     weighted=args.weighted,
                     directed=args.directed,
@@ -167,6 +176,7 @@ if __name__ == "__main__":
                     snippets=json,
                     rdf_dir=rdf_dir,
                     out_dir=args.out_dir,
+                    node_file=args.node_file,
                     tag=tag,
                     weighted=args.weighted,
                     directed=args.directed,

@@ -1,5 +1,5 @@
 """
-Task 5.5 If training with test/train splits, this script generates splits.
+Task 6.5 If training with test/train splits, this script generates splits.
 """
 
 import argparse

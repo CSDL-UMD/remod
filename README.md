@@ -32,6 +32,12 @@ python generate_fred_rdfs.py
 
 This should produce a directory of RDF files, one for each JSON file.
 
+### Identify terminal nodes
+The following script identifies the nodes that correspond to the subject and object for each snippet, and store them in a dataframe, to be used later when calculating the shortest path.
+
+```
+python 
+
 ### Build Corpus Graph
 
 ```

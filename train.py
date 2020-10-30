@@ -1,5 +1,5 @@
 """
-Task 6 Train on Shortest Path Vectors
+Task 7 Train on Shortest Path Vectors
 """
 import argparse
 import config

@@ -18,6 +18,7 @@ N2V_TEMP = "%s/temp" % N2V_DIR
 
 # ---------------------- SHORTEST PATHS (FEATURES) ----------------------
 SP_DIR = "%s/shortest_path" % GREC_DIR
+SP_NODES = "%s/nodes" % SP_DIR
 SP_SPLITS_DIR = "%s/splits" % SP_DIR
 SP_TRAIN = "%s/train" % SP_SPLITS_DIR
 SP_VALID = "%s/valid" % SP_SPLITS_DIR

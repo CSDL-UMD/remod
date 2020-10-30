@@ -76,7 +76,6 @@ dependencies:
   - jupyter_core=4.6.3=py38h32f6830_1
   - jupyterlab_pygments=0.1.1=pyh9f0ad1d_0
   - keepalive=0.5=py38h32f6830_3
-  - keras=2.4.3=py_0
   - keras-preprocessing=1.1.0=py_1
   - kiwisolver=1.2.0=py38hfd86e86_0
   - lcms2=2.11=h396b838_0

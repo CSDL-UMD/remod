@@ -8,7 +8,7 @@ import argparse
 import config
 import os
 import datetime
-from data.terminal_nodes import generate_terminal_node_df
+from preproc.terminal_nodes import generate_terminal_node_df
 from utils.file import get_experiment_tag, directory_check, generate_out_file
 from utils.grec import json_relation_tag
 

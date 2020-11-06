@@ -9,7 +9,7 @@ import argparse
 import datetime
 import os
 from utils.rdf import get_relations
-from data.corpus_graph_builder import create_graph
+from preproc.corpus_graph_builder import create_graph
 from utils.file import generate_out_file
 
 

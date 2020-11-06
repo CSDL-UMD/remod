@@ -11,7 +11,7 @@ import os
 from utils.file import absolute_paths, directory_check
 from utils.grec import get_metrics, get_snippet, json_relation_tag
 from utils.api import get_api_key
-from data.fred.fred_extraction import generate_rdfs
+from preproc.fred.fred_extraction import generate_rdfs
 import config
 import json
 

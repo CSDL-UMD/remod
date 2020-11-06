@@ -9,6 +9,8 @@ import datetime
 import os
 import networkx as nx
 from utils.nx_helpers import collapse_fred_nodes
+
+
 def process_entity(ent_str):
     ent_str = list(map(lambda x: x.lower(), ent_str.split()))
 
@@ -17,7 +19,10 @@ def process_entity(ent_str):
 
     return ent_str
 
-def find_terminal_nodes(rdf_path:str, subj: str, obj:str, db_subj:str, db_obj: str) -> tuple:
+
+def find_terminal_nodes(
+    rdf_path: str, subj: str, obj: str, db_subj: str, db_obj: str
+) -> tuple:
     """Find the selected terminal nodes in a provided rdf graph
 
     Args:
@@ -30,8 +35,8 @@ def find_terminal_nodes(rdf_path:str, subj: str, obj:str, db_subj:str, db_obj: s
     Returns:
         tuple: Returns (subject, object) nodes
     """
-    
-    relation = rdf_path.split('/')[-1].split('_')[0]
+
+    relation = rdf_path.split("/")[-1].split("_")[0]
 
     # prep for string matching
     subj = process_entity(subj)
@@ -64,7 +69,7 @@ def find_terminal_nodes(rdf_path:str, subj: str, obj:str, db_subj:str, db_obj: s
 
     # Build list of nodes
     nodes = list(set(graph.nodes()))
-    
+
     # First pass through nodes - do any match db_subj or db obj?
     for node in nodes:
         if db_subj in node:
@@ -72,7 +77,7 @@ def find_terminal_nodes(rdf_path:str, subj: str, obj:str, db_subj:str, db_obj: s
         if db_obj in node:
             obj_node = db_obj
 
-     # Find nodes that contain object and subject (Second Pass)
+    # Find nodes that contain object and subject (Second Pass)
     for node in nodes:
         extracted = None  # captures tag of ontology node, capturing its value
         if sub_node is not None and obj_node is not None:
@@ -134,7 +139,10 @@ def find_terminal_nodes(rdf_path:str, subj: str, obj:str, db_subj:str, db_obj: s
 
     return (sub_node, obj_node)
 
-def generate_terminal_node_df(snippets: str, rdf_dir: str, out_dir:str, tag:str, existing: str = None):
+
+def generate_terminal_node_df(
+    snippets: str, rdf_dir: str, out_dir: str, tag: str, existing: str = None
+):
     """Generates a dataframe of terminal nodes for each RDF graph provided in rdf_dir
 
     Args:
@@ -187,7 +195,7 @@ def generate_terminal_node_df(snippets: str, rdf_dir: str, out_dir:str, tag:str,
                 break
 
         print(f"Processing {uid}: rating: {rating}, subject: {subj}, object: {obj}")
-        
+
         # if bad subject/object, skip to next rdf
         if "needs_entry" in subj or "needs_entry" in obj:
             print(f"ERROR: Bad subject or object, skipping {uid}")
@@ -196,10 +204,10 @@ def generate_terminal_node_df(snippets: str, rdf_dir: str, out_dir:str, tag:str,
         term_nodes = find_terminal_nodes(rdf_path, subj, obj, db_subj, db_obj)
 
         node_dict[uid] = dict()
-        node_dict[uid]['sub'] = term_nodes[0]
-        node_dict[uid]['obj'] = term_nodes[1]
+        node_dict[uid]["sub"] = term_nodes[0]
+        node_dict[uid]["obj"] = term_nodes[1]
 
-    df = pd.DataFrame.from_dict(node_dict, orient='index')
+    df = pd.DataFrame.from_dict(node_dict, orient="index")
 
     out_file = generate_out_file("terminal_nodes.pkl", out_dir, tag)
 
@@ -211,4 +219,4 @@ def generate_terminal_node_df(snippets: str, rdf_dir: str, out_dir:str, tag:str,
     print(f"Terminal Nodes written to {out_file}")
     print("Completed generate_terminal_node_df() execution")
     print("-" * 30)
-        
+

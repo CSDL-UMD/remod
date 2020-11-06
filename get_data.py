@@ -6,7 +6,7 @@ Downloads GREC Data into a specified directory
 import argparse
 import os
 import pathlib
-
+from shutil import copyfile
 import requests
 
 import config
@@ -64,3 +64,6 @@ directory_check(dir)
 for url in GREC_URLS:
     print(f"Downloading { pathlib.Path(url).name } ...")
     download_file(url, dir)
+
+print(f"Copying ./data/cr.json to {dir}")
+copyfile('./data/cr.json', (dir + '/cr.json'))

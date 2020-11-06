@@ -1,0 +1,506 @@
+[
+  {
+    "pred": "/people/person/place_of_birth",
+    "sub": "Penny Wong",
+    "obj": "Malaysia",
+    "evidences": [
+      {
+        "url": "https://factcheck.afp.com/labor-senator-penny-wong-renounced-her-malaysian-citizenship-she-was-elected-australian-senate",
+        "snippet": "Malaysian-born Senator Penny Wong ineligible for Australian parliament."
+      }
+    ],
+    "UID": "pob_cr1",
+    "maj_vote": "yes",
+    "verdict_relation": "true",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "false",
+    "dbpedia_sub": "http://dbpedia.org/resource/Penny_Wong",
+    "dbpedia_obj": "http://www.ontologydesignpatterns.org/ont/fred/domain.owl#Malaysian"
+  },
+  {
+    "pred": "/people/person/place_of_birth",
+    "sub": "Barack Obama",
+    "obj": "Kenya",
+    "evidences": [
+      {
+        "url": "https://www.politifact.com/factchecks/2011/apr/07/donald-trump/donald-trump-says-president-obamas-grandmother-cau/",
+        "snippet": "Donald Trump says President Obama's grandmother in Kenya said he was born in Kenya and she was there and witnessed the birth."
+      }
+    ],
+    "UID": "pob_cr2",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "true",
+    "dbpedia_sub": "http://dbpedia.org/resource/Barack_Obama",
+    "dbpedia_obj": "http://dbpedia.org/resource/Kenya"
+  },
+  {
+    "pred": "/people/person/place_of_birth",
+    "sub": "Barack Obama",
+    "obj": "United States",
+    "evidences": [
+      {
+        "url": "https://www.factcheck.org/2011/04/indeed-born-in-the-u-s-a/",
+        "snippet": "Barack Obama was born in the United States."
+      }
+    ],
+    "UID": "pob_cr3",
+    "maj_vote": "yes",
+    "verdict_relation": "true",
+    "verdict_claim" : "true",
+    "claim_equal_relation": "true",
+    "dbpedia_sub": "http://dbpedia.org/resource/Barack_Obama",
+    "dbpedia_obj": "http://dbpedia.org/resource/United_States"
+  },
+  {
+    "pred": "/people/person/place_of_birth",
+    "sub": "Fred Trump",
+    "obj": "Germany",
+    "evidences": [
+      {
+        "url": "https://www.politifact.com/factchecks/2019/apr/04/donald-trump/despite-what-donald-trump-keeps-saying-his-father-/",
+        "snippet": "Donald Trump says his father, Fred Trump, was born in a very wonderful place in Germany."
+      }
+    ],
+    "UID": "pob_cr4",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "true",
+    "dbpedia_sub": "http://dbpedia.org/resource/Fred_Trump",
+    "dbpedia_obj": "http://dbpedia.org/resource/Germany"
+  },
+  {
+    "pred": "/people/person/date_of_birth",
+    "sub": "Barron Trump",
+    "obj": "2006",
+    "evidences": [
+      {
+        "url": "https://www.politifact.com/factchecks/2018/nov/04/blog-posting/would-trumps-own-son-be-affected-order-eliminating/",
+        "snippet": "Barron Trump was born in March 2006 and Melania wasn't a legal citizen until July 2006. So under this executive order, his own son wouldn't be an American citizen."
+      }
+    ],
+    "UID": "dob_cr5",
+    "maj_vote": "yes",
+    "verdict_relation": "true",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "false",
+    "dbpedia_sub": "http://www.ontologydesignpatterns.org/ont/fred/domain.owl#Barron_trump",
+    "dbpedia_obj": "2006-03-01"
+  },
+  {
+    "pred": "/people/person/date_of_birth",
+    "sub": "Isabelle Duterte",
+    "obj": "January 26, 2002",
+    "evidences": [
+      {
+        "url": "http://verafiles.org/articles/vera-files-fact-check-how-old-isabelle-duterte-shes-17-her-f",
+        "snippet": "Isabelle Duterte was born on Jan. 26, 2002, which makes her only 15 years old today."
+      }
+    ],
+    "UID": "dob_cr6",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "true",
+    "dbpedia_sub": "http://www.ontologydesignpatterns.org/ont/fred/domain.owl#Isabelle_duterte",
+    "dbpedia_obj": "2002-01-01"
+  },
+  {
+    "pred": "/people/person/education./education/education/degree",
+    "sub": "Tej Pratap Yadav",
+    "obj": "Doctorate Degree",
+    "evidences": [
+      {
+        "url": "https://www.boomlive.in/no-lalus-son-tej-pratap-did-not-receive-a-doctorate-from-takshashila-university/",
+        "snippet": "Tej Pratap Yadav Receives A Doctorate Degree From Takshsila University In Bihar."
+      }
+    ],
+    "UID": "education_cr7",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "true",
+    "dbpedia_sub": "http://dbpedia.org/resource/Tej_Pratap_Yadav",
+    "dbpedia_obj": "http://dbpedia.org/resource/Doctorate"
+  },
+  {
+    "pred": "/people/person/education./education/education/degree",
+    "sub": "Smriti Irani",
+    "obj": "MA Degree",
+    "evidences": [
+      {
+        "url": "https://www.altnews.in/smriti-irani-degree-row-abp-news-anchor-defends-minister-with-falsehood/",
+        "snippet": "Smriti Irani has a MA degree."
+      }
+    ],
+    "UID": "education_cr8",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "true",
+    "dbpedia_sub": "http://dbpedia.org/resource/Smriti_Irani",
+    "dbpedia_obj": "http://dbpedia.org/resource/Master_of_Arts"
+  },
+  {
+    "pred": "/people/person/education./education/education/degree",
+    "sub": "Melania Trump",
+    "obj": "Bachelor's Degree",
+    "evidences": [
+      {
+        "url": "https://www.politifact.com/factchecks/2020/feb/20/blog-posting/claim-about-melania-trump-touting-false-credential/",
+        "snippet": "Melania Trump lied under oath in 2013 about graduating from college with a bachelor’s degree in architecture."
+      }
+    ],
+    "UID": "education_cr9",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "true",
+    "claim_equal_relation": "false",
+    "dbpedia_sub": "http://dbpedia.org/resource/Melania_Trump",
+    "dbpedia_obj": "http://dbpedia.org/resource/Bachelor's_degree"
+  },
+  {
+    "pred": "/people/person/education./education/education/degree",
+    "sub": "Michelle Obama",
+    "obj": "Juris Doctor",
+    "evidences": [
+      {
+        "url": "http://checkyourfact.com/2020/06/28/fact-check-michelle-obama-doctorate-law/",
+        "snippet": "Former first lady Michelle Obama recently earned a doctorate degree in law."
+      }
+    ],
+    "UID": "education_cr10",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "true",
+    "dbpedia_sub": "http://dbpedia.org/resource/Michelle_Obama",
+    "dbpedia_obj": "http://dbpedia.org/resource/Juris_Doctor"
+  },
+  {
+    "pred": "/people/person/education./education/education/degree",
+    "sub": "Pravan Gordhan",
+    "obj": "Degree",
+    "evidences": [
+      {
+        "url": "https://factcheck.afp.com/south-african-minister-pravin-gordhan-has-been-facing-questions-over-his-pharmacy-degree-two",
+        "snippet": "Pravin Gordhan does not have a degree."
+      }
+    ],
+    "UID": "education_cr11",
+    "maj_vote": "yes",
+    "verdict_relation": "true",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "true",
+    "dbpedia_sub": "http://www.ontologydesignpatterns.org/ont/fred/domain.owl#Pravin_gordhan",
+    "dbpedia_obj": "http://www.ontologydesignpatterns.org/ont/fred/domain.owl#Degree"
+  },
+  {
+    "pred": "/people/person/education./education/education/degree",
+    "sub": "Alexandria Ocasio-Cortez",
+    "obj": "Economics Degree",
+    "evidences": [
+      {
+        "url": "https://leadstories.com/hoax-alert/2019/04/fake-news-alexandria-ocasio-cortezs-economics-degree-recalled.html",
+        "snippet": "Alexandria Ocasio-Cortez's economics degree recalled."
+      }
+    ],
+    "UID": "education_cr12",
+    "maj_vote": "yes",
+    "verdict_relation": "true",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "false",
+    "dbpedia_sub": "http://www.ontologydesignpatterns.org/ont/fred/domain.owl#Alexandria_ocasio_cortez",
+    "dbpedia_obj": "http://www.ontologydesignpatterns.org/ont/fred/domain.owl#EconomicsDegree"
+  },
+  {
+    "pred": "/people/person/education./education/education/degree",
+    "sub": "Imee Marcos",
+    "obj": "Bachelor's Degree",
+    "evidences": [
+      {
+        "url": "https://www.rappler.com/newsbreak/fact-check/false-imee-marcos-princeton-degree",
+        "snippet": "Ilocos Norte Governor Imee Marcos claimed on January 16 that she earned a degree from Princeton University."
+      }
+    ],
+    "UID": "education_cr13",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "true",
+    "dbpedia_sub": "http://dbpedia.org/resource/Imee_Marcos",
+    "dbpedia_obj": "http://www.ontologydesignpatterns.org/ont/fred/domain.owl#Degree"
+  },
+  {
+    "pred": "/people/person/education./education/education/institution",
+    "sub": "Imee Marcos",
+    "obj": "Princeton University",
+    "evidences": [
+      {
+        "url": "https://www.rappler.com/newsbreak/fact-check/false-imee-marcos-princeton-degree",
+        "snippet": "Ilocos Norte Governor Imee Marcos claimed on January 16 that she earned a degree from Princeton University."
+      }
+    ],
+    "UID": "institution_cr14",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "true",
+    "dbpedia_sub": "http://dbpedia.org/resource/Imee_Marcos",
+    "dbpedia_obj": "http://dbpedia.org/resource/Princeton_University"
+  },
+  {
+    "pred": "/people/person/education./education/education/institution",
+    "sub": "Tej Pratap Yadav",
+    "obj": "Takshsila University",
+    "evidences": [
+      {
+        "url": "https://www.boomlive.in/no-lalus-son-tej-pratap-did-not-receive-a-doctorate-from-takshashila-university/",
+        "snippet": "Tej Pratap Yadav Receives A Doctorate Degree From Takshsila University In Bihar."
+      }
+    ],
+    "UID": "institution_cr15",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "true",
+    "dbpedia_sub": "http://dbpedia.org/resource/Tej_Pratap_Yadav",
+    "dbpedia_obj": "http://www.ontologydesignpatterns.org/ont/fred/domain.owl#Takshsila_university"
+  },
+  {
+    "pred": "/people/person/education./education/education/institution",
+    "sub": "Patrick Murphy",
+    "obj": "University of Miami",
+    "evidences": [
+      {
+        "url": "http://www.politifact.com/factchecks/2016/sep/15/marco-rubio/marco-rubios-ad-says-patrick-murphy-embellished-un/",
+        "snippet": "Patrick Murphy embellished, according to reports, his University of Miami academic achievement."
+      }
+    ],
+    "UID": "institution_cr16",
+    "maj_vote": "yes",
+    "verdict_relation": "true",
+    "verdict_claim" : "true",
+    "claim_equal_relation": "false",
+    "dbpedia_sub": "http://dbpedia.org/resource/Patrick_Murphy_(Florida_politician)",
+    "dbpedia_obj": "http://dbpedia.org/resource/University_of_Miami"
+  },
+  {
+    "pred": "/people/person/education./education/education/institution",
+    "sub": "Vladimir Putin",
+    "obj": "Patrice Lumumba University",
+    "evidences": [
+      {
+        "url": "http://www.politifact.com/factchecks/2015/oct/09/ben-carson/ben-carson-says-mahmoud-abbas-ali-khamenei-vladimi/",
+        "snippet": "Mahmoud Abbas, Ali Khamenei, and Vladimir Putin met each other in the class of 1968 at Patrice Lumumba University in Moscow."
+      }
+    ],
+    "UID": "institution_cr17",
+    "maj_vote": "yes",
+    "verdict_relation": "true",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "false",
+    "dbpedia_sub": "http://dbpedia.org/resource/Vladimir_Putin",
+    "dbpedia_obj": "http://dbpedia.org/resource/Peoples'_Friendship_University_of_Russia"
+  },
+  {
+    "pred": "/people/person/education./education/education/institution",
+    "sub": "Marina Butina",
+    "obj": "American University",
+    "evidences": [
+      {
+        "url": "https://www.polygraph.info/a/butina-state-ties-denial-fact-check/29727114.html",
+        "snippet": "Maria Butina is a human rights activist, a student of the American University, and the most relevant is that she is a person who did not work (collaborate) with the Russian state bodies."
+      }
+    ],
+    "UID": "institution_cr18",
+    "maj_vote": "yes",
+    "verdict_relation": "true",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "false",
+    "dbpedia_sub": "http://www.ontologydesignpatterns.org/ont/fred/domain.owl#Maria_butina",
+    "dbpedia_obj": "http://dbpedia.org/resource/American_University"
+  },
+  {
+    "pred": "/people/person/education./education/education/institution",
+    "sub": "Imee Marcos",
+    "obj": "University of the Philippines",
+    "evidences": [
+      {
+        "url": "https://www.rappler.com/newsbreak/fact-check/imee-marcos-record-up-college-law-graduated-cum-laude",
+        "snippet": "Ilocos Norte Governor Imee Marcos graduated cum laude from the University of the Philippines (UP) College of Law."
+      }
+    ],
+    "UID": "institution_cr19",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "true",
+    "dbpedia_sub": "http://dbpedia.org/resource/Imee_Marcos",
+    "dbpedia_obj": "http://dbpedia.org/resource/University_of_the_Philippines"
+  },
+  {
+    "pred": "/people/person/education./education/education/institution",
+    "sub": "David Hogg",
+    "obj": "Redondo Shores Continuation High School",
+    "evidences": [
+      {
+        "url": "https://www.politifact.com/factchecks/2018/mar/30/blog-posting/no-david-hogg-graduate-california-high-school/",
+        "snippet": "David Hogg graduated from Redondo Shores High School in 2015."
+      }
+    ],
+    "UID": "institution_cr20",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "true",
+    "dbpedia_sub": "http://dbpedia.org/resource/David_Hogg",
+    "dbpedia_obj": "http://www.ontologydesignpatterns.org/ont/fred/domain.owl#Redondo_shores_high_school"
+  },
+  {
+    "pred": "/people/deceased_person/place_of_death",
+    "sub": "Manohar Parrikar",
+    "obj": "Goa",
+    "evidences": [
+      {
+        "url": "https://www.altnews.in/no-sadhvi-pragya-did-not-say-manohar-parrikar-died-of-cancer-because-he-allowed-beef-in-goa/",
+        "snippet": "Sadhvi Pragya Singh Thakur said Manohar Parrikar died of cancer because he allowed the consumption of beef in Goa."
+      }
+    ],
+    "UID": "pod_cr21",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "false",
+    "dbpedia_sub": "http://dbpedia.org/resource/Manohar_Parrikar",
+    "dbpedia_obj": "http://dbpedia.org/resource/Goa"
+  },
+  {
+    "pred": "/people/deceased_person/place_of_death",
+    "sub": "Tucker Carlson",
+    "obj": "Washington D.C.",
+    "evidences": [
+      {
+        "url": "http://www.politifact.com/factchecks/2017/may/15/blog-posting/liberal-troll-behind-tucker-carlson-death-hoax-spr/",
+        "snippet": "Fox star Tucker Carlson in critical condition (then died) after head on collision driving home in Washington D.C."
+      }
+    ],
+    "UID": "pod_cr22",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "true",
+    "dbpedia_sub": "http://www.ontologydesignpatterns.org/ont/fred/domain.owl#Fox_star_tucker_carlson",
+    "dbpedia_obj": "http://www.ontologydesignpatterns.org/ont/fred/domain.owl#Washington_d.c."
+  },
+  {
+    "pred": "/people/deceased_person/place_of_death",
+    "sub": "Nasser Al Kharafi",
+    "obj": "Kuwait",
+    "evidences": [
+      {
+        "url": "https://factcheck.afp.com/photo-shows-funeral-man-trinidad-and-tobago-not-kuwait",
+        "snippet": "Nasser Al Kharafi died in Kuwait."
+      }
+    ],
+    "UID": "pod_cr23",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "true",
+    "dbpedia_sub": "http://dbpedia.org/resource/Nasser_Al-Kharafi",
+    "dbpedia_obj": "http://dbpedia.org/resource/Kuwait"
+  },
+  {
+    "pred": "/people/deceased_person/place_of_death",
+    "sub": "Amit Sharma",
+    "obj": "Delhi",
+    "evidences": [
+      {
+        "url": "https://www.altnews.in/fake-message-about-dcp-amit-sharmas-death-during-delhi-riots-goes-viral/",
+        "snippet": "DCP Amit Sharma passed away in Delhi riots."
+      }
+    ],
+    "UID": "pod_cr24",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "true",
+    "dbpedia_sub": "http://www.ontologydesignpatterns.org/ont/fred/domain.owl#Dcp_amit_sharma",
+    "dbpedia_obj": "http://dbpedia.org/resource/Delhi"
+  },
+  {
+    "pred": "/people/deceased_person/place_of_death",
+    "sub": "Jason Statham",
+    "obj": "New York",
+    "evidences": [
+      {
+        "url": "http://newsmobile.in/articles/2020/08/19/fact-check-news-about-fast-furious-actor-jason-stathams-death-is-fake/",
+        "snippet": "It is being claimed that Jason Statham was murdered at his home in New York by assailants who broke into his mansion."
+      }
+    ],
+    "UID": "pod_cr25",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "false",
+    "dbpedia_sub": "http://dbpedia.org/resource/Jason_Statham",
+    "dbpedia_obj": "http://dbpedia.org/resource/New_York_(magazine)"
+  },
+  {
+    "pred": "/people/deceased_person/place_of_death",
+    "sub": "Robert Downey Jr.",
+    "obj": "Hollywood",
+    "evidences": [
+      {
+        "url": "https://verafiles.org/articles/vera-files-fact-check-imposter-bbc-abs-cbn-fb-page-posts-dea",
+        "snippet": "Actor Robert Downey Jr. died in a car crash stunt in Hollywood on July 8."
+      }
+    ],
+    "UID": "pod_cr26",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "false",
+    "dbpedia_sub": "http://www.ontologydesignpatterns.org/ont/fred/domain.owl#Actor_robert_downey_jr.",
+    "dbpedia_obj": "http://dbpedia.org/resource/Hollywood"
+  },
+  {
+    "pred": "/people/person/education./education/education/institution",
+    "sub": "Mahmoud Abbas",
+    "obj": "Patrice Lumumba University",
+    "evidences": [
+      {
+        "url": "http://www.politifact.com/factchecks/2015/oct/09/ben-carson/ben-carson-says-mahmoud-abbas-ali-khamenei-vladimi/",
+        "snippet": "Mahmoud Abbas, Ali Khamenei, and Vladimir Putin met each other in the class of 1968 at Patrice Lumumba University in Moscow."
+      }
+    ],
+    "UID": "institution_cr27",
+    "maj_vote": "yes",
+    "verdict_relation": "true",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "false",
+    "dbpedia_sub": "http://dbpedia.org/resource/Mahmoud_Abbas",
+    "dbpedia_obj": "http://dbpedia.org/resource/Peoples'_Friendship_University_of_Russia"
+  },
+  {
+    "pred": "/people/person/education./education/education/institution",
+    "sub": "Ali Kamenei",
+    "obj": "Patrice Lumumba University",
+    "evidences": [
+      {
+        "url": "http://www.politifact.com/factchecks/2015/oct/09/ben-carson/ben-carson-says-mahmoud-abbas-ali-khamenei-vladimi/",
+        "snippet": "Mahmoud Abbas, Ali Khamenei, and Vladimir Putin met each other in the class of 1968 at Patrice Lumumba University in Moscow."
+      }
+    ],
+    "UID": "institution_cr28",
+    "maj_vote": "yes",
+    "verdict_relation": "false",
+    "verdict_claim" : "false",
+    "claim_equal_relation": "false",
+    "dbpedia_sub": "http://dbpedia.org/resource/Ali_Khamenei",
+    "dbpedia_obj": "http://dbpedia.org/resource/Peoples'_Friendship_University_of_Russia"
+  },
+]

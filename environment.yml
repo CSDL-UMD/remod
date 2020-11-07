@@ -191,5 +191,10 @@ dependencies:
   - zipp=3.1.0=py_0
   - zlib=1.2.11=h516909a_1009
   - zstd=1.4.5=h9ceee32_0
+  - pip:
+    - csrgraph==0.1.22
+    - llvmlite==0.34.0
+    - nodevectors==0.1.22
+    - numba==0.51.2
 prefix: /data/mjsumpter/miniconda3/envs/re
 

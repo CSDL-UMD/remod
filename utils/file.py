@@ -50,7 +50,7 @@ def directory_check(dir_path: str, create: bool = True) -> None:
         if create:
             os.makedirs(dir_path)
         else:
-            raise Exception("This directory does not exist. Set create=True to make it")
+            raise Exception(f"This directory, {dir_path}, does not exist. Set create=True to make it")
 
 
 def generate_out_file(filename, dir, tag):

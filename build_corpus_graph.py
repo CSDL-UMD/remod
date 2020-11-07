@@ -39,8 +39,8 @@ def arg_parse(arg_list=None):
         "-in",
         dest="rdf_dir",
         type=str,
-        default=config.GREC_RDF_DIR,
-        help=f"Set input directory of RDFs, default {config.GREC_RDF_DIR}",
+        default=config.RDF_DIR,
+        help=f"Set input directory of RDFs, default {config.RDF_DIR}",
     )
 
     parser.add_argument(
@@ -48,8 +48,8 @@ def arg_parse(arg_list=None):
         "-out",
         dest="out_dir",
         type=str,
-        default=config.GREC_GRAPH_DIR,
-        help=f"Set output directory, default {config.GREC_GRAPH_DIR}",
+        default=config.GRAPH_DIR,
+        help=f"Set output directory, default {config.GRAPH_DIR}",
     )
 
     parser.add_argument(
@@ -67,7 +67,7 @@ def arg_parse(arg_list=None):
         return parser.parse_args()
 
 
-def main(fred: bool, append_ids: bool, rdf_dir: str, out_dir: str, tag: str) -> None:
+def build(fred: bool, append_ids: bool, rdf_dir: str, out_dir: str, tag: str) -> None:
     """
     rdf_dir: Directory where RDFs are located
     out_dir: Directory to output graph and log
@@ -110,4 +110,4 @@ if __name__ == "__main__":
     out_dir = args.out_dir
     tag = args.exp_tag
 
-    main(fred, append_ids, rdf_dir, out_dir, tag)
+    build(fred, append_ids, rdf_dir, out_dir, tag)

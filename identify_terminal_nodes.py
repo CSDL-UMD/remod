@@ -23,8 +23,8 @@ def arg_parse(arg_list=None):
         "-grec",
         dest="grec_dir",
         type=str,
-        default=config.GREC_JSON_DIR,
-        help=f"Set filepath to GREC jsons, default {config.GREC_JSON_DIR}",
+        default=config.JSON_DIR,
+        help=f"Set filepath to GREC jsons, default {config.JSON_DIR}",
     )
 
     parser.add_argument(
@@ -32,8 +32,8 @@ def arg_parse(arg_list=None):
         "-rdf",
         dest="rdf_dir",
         type=str,
-        default=config.GREC_RDF_DIR,
-        help=f"Set filepath to RDFs, default {config.GREC_RDF_DIR}",
+        default=config.RDF_DIR,
+        help=f"Set filepath to RDFs, default {config.RDF_DIR}",
     )
 
     parser.add_argument(

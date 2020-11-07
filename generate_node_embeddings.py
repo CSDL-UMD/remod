@@ -47,8 +47,8 @@ def arg_parse(arg_list=None):
         "-graph",
         dest="graph_dir",
         type=str,
-        default=config.GREC_GRAPH_DIR,
-        help=f"Set input graph directory, default {config.GREC_GRAPH_DIR}",
+        default=config.GRAPH_DIR,
+        help=f"Set input graph directory, default {config.GRAPH_DIR}",
     )
 
     parser.add_argument(

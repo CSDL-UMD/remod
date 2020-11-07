@@ -5,9 +5,9 @@ SRC_PATH = os.path.dirname(os.path.abspath(__file__))
 
 # ---------------------- PATH ----------------------
 
-GREC_JSON_DIR = "%s/json" % DATA_PATH
-GREC_RDF_DIR = "%s/rdf" % DATA_PATH
-GREC_GRAPH_DIR = "%s/graph" % DATA_PATH
+JSON_DIR = "%s/json" % DATA_PATH
+RDF_DIR = "%s/rdf" % DATA_PATH
+GRAPH_DIR = "%s/graph" % DATA_PATH
 
 # ---------------------- EMBEDDINGS ----------------------
 N2V_DIR = "%s/node2vec" % DATA_PATH

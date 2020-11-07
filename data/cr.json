@@ -502,5 +502,5 @@
     "claim_equal_relation": "false",
     "dbpedia_sub": "http://dbpedia.org/resource/Ali_Khamenei",
     "dbpedia_obj": "http://dbpedia.org/resource/Peoples'_Friendship_University_of_Russia"
-  },
+  }
 ]

@@ -53,7 +53,7 @@ def directory_check(dir_path: str, create: bool = True) -> None:
             raise Exception(f"This directory, {dir_path}, does not exist. Set create=True to make it")
 
 
-def generate_out_file(filename, dir, tag):
+def generate_out_file(filename, dir, tag = None):
     """Generates a full output path for a given file
 
     Arguments:
@@ -69,7 +69,9 @@ def generate_out_file(filename, dir, tag):
     name = get_filename(filename)
     extension = "." + filename.split(".")[1]
 
-    return dir + "/" + name + "-" + tag + extension
+    full_path = (dir + "/" + name + "-" + tag + extension) if tag is not None else (dir + "/" + name + extension)
+
+    return full_path
 
 def get_experiment_tag(filename: str) -> str:
     """Return trailing experiment tag. i.e. model-full-d256-wl50-nw200-win15-p4.0-q4.0-200930.pkl returns full-d256-wl50-nw200-win15-p4.0-q4.0

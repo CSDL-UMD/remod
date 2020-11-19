@@ -135,7 +135,7 @@ if __name__ == "__main__":
         tag += "cv-"
     if args.no_early_stopping:
         tag += "nes-"
-    tag += f"{model_name}-"
+    tag += f"{args.model_name}-"
     tag += f"{remove_tag_date(args.in_tag)}-{now}"
 
     print("train.py")

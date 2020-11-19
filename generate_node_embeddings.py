@@ -97,7 +97,7 @@ if __name__ == "__main__":
     if args.custom != "None":
         params = [n2v_params.n2v_param_dict[args.custom]]
     else:
-        params = [n2v_params.n2v_param_dict["struct"], n2v_params.n2v_param_dict["local"]]
+        params = [n2v_params.n2v_param_dict["best"]]
 
     for run in params:
 

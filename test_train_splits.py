@@ -124,7 +124,7 @@ if __name__ == "__main__":
     df = df.loc[df["Maj_Vote"] == "yes"]
 
     # Remove claimreview
-    df = df[df['UID'].map(lambda x: ('_cr' not in x) or (len(x.split('_')[1]) > 5))]
+    df = df[df['Relation'] != 'cr']
     
     # Balance Classes
     if not args.unbalanced:

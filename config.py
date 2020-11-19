@@ -27,6 +27,10 @@ SP_TEST = "%s/test" % SP_SPLITS_DIR
 MODEL_DIR = "%s/models" % DATA_PATH
 TRAIN_LOGS = "%s/logs" % MODEL_DIR
 
+#---------- CLAIMREVIEW ----------------
+CLAIM_DIR = "%s/claimreview" % DATA_PATH
+CLAIM_DF = "%s/claims.pkl" % CLAIM_DIR
+
 # ---------------------- API Keys ----------------------
 API_KEYS = "%s/api_keys" % DATA_PATH
 FRED_LMTD = "%s/fred_key_lmtd" % API_KEYS

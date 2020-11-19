@@ -127,7 +127,7 @@ def generate_sp_df(
     # Get list of .rdf files in directory
     rdfs = os.listdir(rdf_dir)
     relations = None
-    relation_type = snippets.split("/")[-1].split("_")[0]  # very GREC specific
+    relation_type = snippets.split("/")[-1].split("_")[0].split('.')[0]  # very GREC specific
 
     # load terminal nodes into <nodes> df
     nodes_df = pd.read_pickle(node_file)

@@ -6,7 +6,7 @@ Downloads GREC Data into a specified directory
 import argparse
 import os
 import pathlib
-
+from shutil import copyfile
 import requests
 
 import config
@@ -28,9 +28,9 @@ def arg_parse(arg_list=None):
         "--output-directory",
         "-out",
         dest="output_dir",
-        help=f"Output Directory Path, default {config.GREC_JSON_DIR}",
+        help=f"Output Directory Path, default {config.JSON_DIR}",
         type=str,
-        default=config.GREC_JSON_DIR,
+        default=config.JSON_DIR,
     )
 
     # Parses and returns args
@@ -64,3 +64,6 @@ directory_check(dir)
 for url in GREC_URLS:
     print(f"Downloading { pathlib.Path(url).name } ...")
     download_file(url, dir)
+
+print(f"Copying ./data/cr.json to {dir}")
+copyfile('./data/cr.json', (dir + '/cr.json'))

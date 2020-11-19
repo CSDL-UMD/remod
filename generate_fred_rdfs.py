@@ -1,7 +1,7 @@
 """
 Task 2
 
-Read in all snippets from GREC. Calculate average number of words and collect snippets within 1 std.dev.
+Read in all snippets from GREC and ClaimReview. Calculate average number of words and collect snippets within 1 std.dev.
 
 Pass snippets to FRED to generate RDF graphs
 """
@@ -11,7 +11,7 @@ import os
 from utils.file import absolute_paths, directory_check
 from utils.grec import get_metrics, get_snippet, json_relation_tag
 from utils.api import get_api_key
-from data.fred.fred_extraction import generate_rdfs
+from preproc.fred.fred_extraction import generate_rdfs
 import config
 import json
 
@@ -40,17 +40,17 @@ def arg_parse(arg_list=None):
         "--grec-dir",
         "-grec",
         dest="grec",
-        help=f"The directory path for the GREC, default {config.GREC_JSON_DIR}",
+        help=f"The directory path for the GREC, default {config.JSON_DIR}",
         type=str,
-        default=config.GREC_JSON_DIR,
+        default=config.JSON_DIR,
     )
     parser.add_argument(
         "--rdf-dir",
         "-rdf",
         dest="rdf",
-        help=f"The directory to save the RDFs to, default {config.GREC_RDF_DIR}",
+        help=f"The directory to save the RDFs to, default {config.RDF_DIR}",
         type=str,
-        default=config.GREC_RDF_DIR,
+        default=config.RDF_DIR,
     )
     # Parses and returns args
     if arg_list:
@@ -88,8 +88,8 @@ def main(api_method, api_key_file, grec_dir, rdf_dir):
             uid = relation["UID"]
             snippet = get_snippet(relation)
             len_snip = len(snippet.split())
-            if (
-                len_snip > max or len_snip < min
+            if (len_snip > max or len_snip < min) and (
+                "_cr" not in uid
             ):  # if number of words in snippet is outlier, do not include
                 continue
             else:

@@ -19,7 +19,7 @@ To download the Google Relation Extraction Corpus (GREC):
 python get_data.py
 ```
 
-To build a corpus of claims, please consult the documentation for the [Google FactCheck API](https://toolbox.google.com/factcheck/apis), and add your data to the `GREC_JSON_DIR` as a JSON in the same format as the GREC.
+To build a corpus of claims, please consult the documentation for the [Google FactCheck API](https://toolbox.google.com/factcheck/apis), and add your data to the `JSON_DIR` as a JSON in the same format as the GREC.
 
 ## Preprocessing
 
@@ -36,7 +36,8 @@ This should produce a directory of RDF files, one for each JSON file.
 The following script identifies the nodes that correspond to the subject and object for each snippet, and store them in a dataframe, to be used later when calculating the shortest path.
 
 ```
-python 
+python identify_terminal_nodes.py 
+```
 
 ### Build Corpus Graph
 

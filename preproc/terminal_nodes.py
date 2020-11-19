@@ -9,6 +9,46 @@ import datetime
 import os
 import networkx as nx
 from utils.nx_helpers import collapse_fred_nodes
+import re
+
+
+DEGREE_ABRS = {
+    "Bachelor of Science": ["b.s", "b.sc", "s.b"],
+    "Doctor of Philosophy": ["d.phil", "ph.d"],
+    "Bachelor of Arts": ["a.b", "b.a", "b.s"],
+    "Bachelor of Engineering": ["b.e", "b.eng", "b.s.e", "b.s.e.e"],
+    "Master of Science": ["m.s", "m.sc", "s.m"],
+    "Bachelor of Technology": ["b.tech"],
+    "Master of Arts": ["m.a"],
+    "Master's Degree": ["m.s"],
+    "Master of Philosophy": ["m.phil"],
+    "Legum Doctor": ["ll.d"],
+    "Bachelor's degree": ["a.b"],
+    "Master of Business Administration": ["m.b.a"],
+    "Bachelor of Laws": ["b.l", "l.l.b", "ll.b"],
+    "Dental degree": ["d.d.s"],
+    "Doctor of Law": ["ll.d"],
+    "Juris Doctor": ["j.d"],
+    "Doctor of Medicine": ["m.d"],
+    "Bachelor of Music": ["b.m", "b.mus", "mus.b"],
+    "Bachelor of Education": ["b.ed"],
+    "Doctor of Letters": ["d.litt", "litt.d"],
+    "Doctor of Education": ["ed.d"],
+    "Master of Social Work": ["m.s.w"],
+    "Bachelor of Philosophy": ["ph.b"],
+    "Bachelor of Fine Arts": ["b.f.a"],
+    "Business administration": ["b.b.a"],
+    "Doctor of Science": ["d.sc"],
+    "Doctor of Juridical Science": ["s.j.d"],
+    "Bachelor of Electrical Engineering": ["b.e.e"],
+    "Bachelor of Theology": ["th.b"],
+    "Doctor of Humane Letters": ["l.h.d"],
+    "Master of Laws": ["ll.m"],
+    "Bachelor of Commerce": ["b.comm"],
+    "Doctor of Divinity": ["d.d"],
+}
+
+
 def process_entity(ent_str):
     ent_str = list(map(lambda x: x.lower(), ent_str.split()))
 
@@ -17,7 +57,10 @@ def process_entity(ent_str):
 
     return ent_str
 
-def find_terminal_nodes(rdf_path:str, subj: str, obj:str, db_subj:str, db_obj: str) -> tuple:
+
+def find_terminal_nodes(
+    rdf_path: str, subj: str, obj: str, db_subj: str, db_obj: str
+) -> tuple:
     """Find the selected terminal nodes in a provided rdf graph
 
     Args:
@@ -30,26 +73,24 @@ def find_terminal_nodes(rdf_path:str, subj: str, obj:str, db_subj:str, db_obj: s
     Returns:
         tuple: Returns (subject, object) nodes
     """
-    
-    relation = rdf_path.split('/')[-1].split('_')[0]
+
+    relation = rdf_path.split("/")[-1].split("_")[0]
+
+    deg_abrs = None  # this is for trying to capture "Education" degree nodes
+    # Attempt to capture degree abbreviation: ie. Translate Master of Science into m.s
+    if relation == "e":
+        try:
+            deg_abrs = DEGREE_ABRS[obj]
+        except:
+            pass
 
     # prep for string matching
     subj = process_entity(subj)
     obj = process_entity(obj)
-    deg_abr = None  # this is for trying to capture "Education" degree nodes
-
+    
     # get just year if object is a date
     if relation == "dob":
         obj = [obj[0].split("-")[0]]
-
-    # Attempt to capture degree abbreviation: ie. Translate Master of Science into m.s
-    if relation == "education":
-        try:
-            deg_abr = f"{obj[0][0]}.{obj[-1][0]}"
-            deg_abr = deg_abr.lower()
-            print(f"Object: {deg_abr}")
-        except:
-            pass
 
     sub_node = None
     obj_node = None
@@ -64,15 +105,15 @@ def find_terminal_nodes(rdf_path:str, subj: str, obj:str, db_subj:str, db_obj: s
 
     # Build list of nodes
     nodes = list(set(graph.nodes()))
-    
+
     # First pass through nodes - do any match db_subj or db obj?
     for node in nodes:
         if db_subj in node:
-            sub_node = db_subj
+            sub_node = node
         if db_obj in node:
-            obj_node = db_obj
+            obj_node = node
 
-     # Find nodes that contain object and subject (Second Pass)
+    # Find nodes that contain object and subject (Second Pass)
     for node in nodes:
         extracted = None  # captures tag of ontology node, capturing its value
         if sub_node is not None and obj_node is not None:
@@ -106,11 +147,12 @@ def find_terminal_nodes(rdf_path:str, subj: str, obj:str, db_subj:str, db_obj: s
             # Same as above, but for logic
             print(f"Object node: {node}")
             obj_node = node
-        if deg_abr is not None:
+        if deg_abrs is not None:
             # if "Education", try to match degree abbreviation
-            if deg_abr in extracted and obj_node is None:
-                print(f"Object node: {node}")
-                obj_node = node
+            for ab in deg_abrs:
+                if re.search(ab, extracted, re.IGNORECASE) and obj_node is None:
+                    print(f"Object node: {node}")
+                    obj_node = node
 
     # Final pass, match any words in degree description to an object node - ie 'honorary degree' matches 'degree' or 'honorary doctorate'
     for node in nodes:
@@ -122,7 +164,7 @@ def find_terminal_nodes(rdf_path:str, subj: str, obj:str, db_subj:str, db_obj: s
             extracted = node.split("/")[-1].lower()
         else:
             extracted = node.split("#")[-1].lower()
-        if deg_abr is not None:
+        if deg_abrs is not None:
             if any(word in extracted for word in obj) and obj_node is None:
                 print(f"Object node: {node}")
                 obj_node = node
@@ -134,7 +176,10 @@ def find_terminal_nodes(rdf_path:str, subj: str, obj:str, db_subj:str, db_obj: s
 
     return (sub_node, obj_node)
 
-def generate_terminal_node_df(snippets: str, rdf_dir: str, out_dir:str, tag:str, existing: str = None):
+
+def generate_terminal_node_df(
+    snippets: str, rdf_dir: str, out_dir: str, tag: str, existing: str = None
+):
     """Generates a dataframe of terminal nodes for each RDF graph provided in rdf_dir
 
     Args:
@@ -175,6 +220,7 @@ def generate_terminal_node_df(snippets: str, rdf_dir: str, out_dir:str, tag:str,
         db_subj = None
         db_obj = None
         uid = rdf.split(".")[0]
+        node_dict[uid] = dict()
 
         # get variables from grec .json
         for relation in relations:
@@ -187,19 +233,20 @@ def generate_terminal_node_df(snippets: str, rdf_dir: str, out_dir:str, tag:str,
                 break
 
         print(f"Processing {uid}: rating: {rating}, subject: {subj}, object: {obj}")
-        
+
         # if bad subject/object, skip to next rdf
         if "needs_entry" in subj or "needs_entry" in obj:
             print(f"ERROR: Bad subject or object, skipping {uid}")
+            node_dict[uid]["sub"] = "Not Found"
+            node_dict[uid]["obj"] = "Not Found"
             continue
 
         term_nodes = find_terminal_nodes(rdf_path, subj, obj, db_subj, db_obj)
 
-        node_dict[uid] = dict()
-        node_dict[uid]['sub'] = term_nodes[0]
-        node_dict[uid]['obj'] = term_nodes[1]
+        node_dict[uid]["sub"] = term_nodes[0]
+        node_dict[uid]["obj"] = term_nodes[1]
 
-    df = pd.DataFrame.from_dict(node_dict, orient='index')
+    df = pd.DataFrame.from_dict(node_dict, orient="index")
 
     out_file = generate_out_file("terminal_nodes.pkl", out_dir, tag)
 
@@ -211,4 +258,4 @@ def generate_terminal_node_df(snippets: str, rdf_dir: str, out_dir:str, tag:str,
     print(f"Terminal Nodes written to {out_file}")
     print("Completed generate_terminal_node_df() execution")
     print("-" * 30)
-        
+

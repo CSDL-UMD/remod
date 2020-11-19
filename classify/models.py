@@ -153,7 +153,7 @@ class KNN:
         out_dir: str,
         tag: str,
         encoder_file: str,
-        n_neighbors = 7: int
+        n_neighbors: int = 7
     ):
     
         self.save_dir = out_dir
@@ -296,9 +296,9 @@ class SVM:
         out_dir: str,
         tag: str,
         encoder_file: str,
-        kernel = 'rbf': str,
-        probability = True: bool,
-        random_state= config.RANDOM_SEED: int
+        kernel: str = 'rbf',
+        probability: bool = True,
+        random_state: int = config.RANDOM_SEED
     ):
     
         self.save_dir = out_dir
@@ -369,8 +369,8 @@ class Logistic_Regression:
         out_dir: str,
         tag: str,
         encoder_file: str,
-        random_state = config.RANDOM_SEED: int,
-        multi_class = 'ovr': str
+        random_state: int  = config.RANDOM_SEED,
+        multi_class: str  = 'ovr'
     ):
     
         self.save_dir = out_dir
@@ -441,7 +441,7 @@ class Decision_Tree:
         out_dir: str,
         tag: str,
         encoder_file: str,
-        random_state = config.RANDOM_SEED: int,
+        random_state: int  = config.RANDOM_SEED,
     ):
     
         self.save_dir = out_dir

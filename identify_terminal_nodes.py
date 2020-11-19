@@ -8,7 +8,7 @@ import argparse
 import config
 import os
 import datetime
-from data.terminal_nodes import generate_terminal_node_df
+from preproc.terminal_nodes import generate_terminal_node_df
 from utils.file import get_experiment_tag, directory_check, generate_out_file
 from utils.grec import json_relation_tag
 
@@ -23,8 +23,8 @@ def arg_parse(arg_list=None):
         "-grec",
         dest="grec_dir",
         type=str,
-        default=config.GREC_JSON_DIR,
-        help=f"Set filepath to GREC jsons, default {config.GREC_JSON_DIR}",
+        default=config.JSON_DIR,
+        help=f"Set filepath to GREC jsons, default {config.JSON_DIR}",
     )
 
     parser.add_argument(
@@ -32,8 +32,8 @@ def arg_parse(arg_list=None):
         "-rdf",
         dest="rdf_dir",
         type=str,
-        default=config.GREC_RDF_DIR,
-        help=f"Set filepath to RDFs, default {config.GREC_RDF_DIR}",
+        default=config.RDF_DIR,
+        help=f"Set filepath to RDFs, default {config.RDF_DIR}",
     )
 
     parser.add_argument(
@@ -50,7 +50,7 @@ def arg_parse(arg_list=None):
         dest="tag",
         type=str,
         default="None",
-        help="Experimental tag. If none, defaults to YYMMDD",
+        help="Experimental tag. Default none",
     )
 
     if arg_list:
@@ -70,7 +70,7 @@ if __name__ == "__main__":
     directory_check(args.rdf_dir, create=False)
     directory_check(args.out_dir)
 
-    tag = args.tag if args.tag != "None" else now
+    tag = args.tag if args.tag != "None" else None
 
     arg_dict.pop("tag")
 

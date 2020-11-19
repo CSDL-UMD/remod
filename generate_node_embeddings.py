@@ -47,8 +47,8 @@ def arg_parse(arg_list=None):
         "-graph",
         dest="graph_dir",
         type=str,
-        default=config.GREC_GRAPH_DIR,
-        help=f"Set input graph directory, default {config.GREC_GRAPH_DIR}",
+        default=config.GRAPH_DIR,
+        help=f"Set input graph directory, default {config.GRAPH_DIR}",
     )
 
     parser.add_argument(
@@ -97,7 +97,7 @@ if __name__ == "__main__":
     if args.custom != "None":
         params = [n2v_params.n2v_param_dict[args.custom]]
     else:
-        params = [n2v_params.n2v_param_dict["struct"], n2v_params.n2v_param_dict["local"]]
+        params = [n2v_params.n2v_param_dict["best"]]
 
     for run in params:
 

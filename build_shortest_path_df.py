@@ -75,8 +75,8 @@ def arg_parse(arg_list=None):
         "--node-file",
         dest="node_file",
         type=str,
-        default=(config.SP_NODES + '/terminal_nodes-grec.pkl'),
-        help=f"Set filepath for terminal node dataframe, default {(config.SP_NODES + '/terminal_nodes-grec.pkl')}",
+        default=(config.SP_NODES + '/terminal_nodes.pkl'),
+        help=f"Set filepath for terminal node dataframe, default {(config.SP_NODES + '/terminal_nodes.pkl')}",
     )
 
     parser.add_argument(
@@ -111,7 +111,7 @@ if __name__ == "__main__":
     if args.custom != "None":
         tags = [sp_params.sp_param_dict[args.custom]]
     else:
-        tags = [sp_params.sp_param_dict["struct"], sp_params.sp_param_dict["local"]]
+        tags = [sp_params.sp_param_dict["best"]]
     
     models = os.listdir(args.n2v_model_dir)
 

@@ -75,6 +75,9 @@ The experimental tag needs to be provided. This is the tag attached to the split
 python train.py --model-name "dnn_wide" -itag <exp_tag>
 ```
 
+### Test model on ClaimReview Claims
+To test the model on the selected ClaimReview claims, run the code found in ```classify_claimreview.ipynb``` or export this code to a python script. Be sure to change the input filenames found at the top of the notebook. 
+
 ## Fact-checking
 ### Knowledge Stream
 To fact-check the relevant claims from ClaimReview, please refer to [Knowledge Stream](https://github.com/shiralkarprashant/knowledgestream)

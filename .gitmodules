@@ -1,0 +1,3 @@
+[submodule "knowledgestream"]
+	path = knowledgestream
+	url = git@github.com:mjsumpter/knowledgestream.git

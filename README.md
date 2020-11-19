@@ -62,7 +62,7 @@ python build_shortest_path_df.py
 ```
 
 #### Generate Train/Test Splits
-Currently, training is not implemented with cross-validation, so this step is necessarily (although it is a TODO to add cross-validation training).
+Currently, training is not implemented with cross-validation, so this step is necessary (although it is a TODO to add cross-validation training).
 
 ```
 python test_train_splits.py

@@ -157,7 +157,7 @@ if __name__ == "__main__":
     else:
 
         train, valid, test = load_splits(args.in_dir + "/splits", args.in_tag)
-
+        encoder_file = args.in_dir + "/splits/class_encoder.npy"
         if args.model_name == "dnn_wide":
 
             training_params = {
@@ -165,8 +165,6 @@ if __name__ == "__main__":
                 "batch_size": args.batch_size,
                 "workers": 4,
             }
-
-            encoder_file = args.in_dir + "/splits/class_encoder.npy"
 
             model = models.DNN_W(
                 train=train,
@@ -186,11 +184,11 @@ if __name__ == "__main__":
 
             # merge training and validation set for sklearn algos
             train_X = train[0].append(valid[0], ignore_index=True)
-            train_y = np.concatenate((train[1], valid[1]), axis=None)
+            train_y = np.concatenate((train[1], valid[1]), axis=0)
             train = (train_X, train_y)
             del valid
 
-            model = models.model_names[model_name](
+            model = models.model_names[args.model_name](
                 train=train,
                 test=test,
                 out_dir=args.out_dir,

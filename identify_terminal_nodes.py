@@ -50,7 +50,7 @@ def arg_parse(arg_list=None):
         dest="tag",
         type=str,
         default="None",
-        help="Experimental tag. If none, defaults to YYMMDD",
+        help="Experimental tag. Default none",
     )
 
     if arg_list:
@@ -70,7 +70,7 @@ if __name__ == "__main__":
     directory_check(args.rdf_dir, create=False)
     directory_check(args.out_dir)
 
-    tag = args.tag if args.tag != "None" else now
+    tag = args.tag if args.tag != "None" else None
 
     arg_dict.pop("tag")
 

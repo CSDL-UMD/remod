@@ -79,5 +79,25 @@ python train.py --model-name "dnn_wide" -itag <exp_tag>
 To test the model on the selected ClaimReview claims, run the code found in ```classify_claimreview.ipynb``` or export this code to a python script. Be sure to change the input filenames found at the top of the notebook. 
 
 ## Fact-checking
-### Knowledge Stream
-To fact-check the relevant claims from ClaimReview, please refer to [Knowledge Stream](https://github.com/shiralkarprashant/knowledgestream)
+
+### Install Knowledge Stream
+To fact-check the relevant claims from ClaimReview, first install [Knowledge Stream](https://github.com/mjsumpter/knowledgestream) and download and extract the [data](http://carl.cs.indiana.edu/data/fact-checking/data.zip) to `config.KS_DIR`.
+
+### Prep Classified ClaimReview Claims for input to Knowledge Stream algorithms
+Run the code found in `prep_claims.ipynb`, or export and run as a python script. Again, be sure to check filenames found throughout script.
+
+### Run Knowledge Stream algorithms
+
+If using my Knowledge Stream fork for Python3, you will be prompted upon running `kstream` for the data directory. Enter `<config.KS_DIR>/data`
+
+#### Knowledge Stream (KS)
+`kstream -m stream -d datasets/claimreview/claims.csv -o <config.KS_OUTPUT>`
+
+#### Knowledge Linker (KL)
+`kstream -m klinker -d datasets/claimreview/claims.csv -o <config.KS_OUTPUT>`
+
+#### Relational Knowledge Linker (KL-REL)
+`kstream -m relklinker -d datasets/claimreview/claims.csv -o <config.KS_OUTPUT>`
+
+### Evaluate Knowledge Stream algorithms on ClaimReview Claims
+Run the code found in `evaluate_kl.ipynb`, or export and run as a python script. Again, be sure to check filenames throughout script.

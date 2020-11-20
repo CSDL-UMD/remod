@@ -17,7 +17,7 @@ N2V_TEMP = "%s/temp" % N2V_DIR
 
 # ---------------------- SHORTEST PATHS (FEATURES) ----------------------
 SP_DIR = "%s/shortest_path" % DATA_PATH
-SP_NODES = "%s/nodes" % SP_DIR
+SP_NODES = "%s/nodes/terminal_nodes.pkl" % SP_DIR
 SP_SPLITS_DIR = "%s/splits" % SP_DIR
 SP_TRAIN = "%s/train" % SP_SPLITS_DIR
 SP_VALID = "%s/valid" % SP_SPLITS_DIR
@@ -30,6 +30,11 @@ TRAIN_LOGS = "%s/logs" % MODEL_DIR
 #---------- CLAIMREVIEW ----------------
 CLAIM_DIR = "%s/claimreview" % DATA_PATH
 CLAIM_DF = "%s/claims.pkl" % CLAIM_DIR
+
+#--------- KNOWLEDGE STREAM -------------
+KS_DIR = "%s/ks" % DATA_PATH
+KS_KG = "%s/data/kg" % KS_DIR
+KS_OUTPUT = "%s/output" % KS_DIR 
 
 # ---------------------- API Keys ----------------------
 API_KEYS = "%s/api_keys" % DATA_PATH

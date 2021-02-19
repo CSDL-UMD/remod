@@ -1,6 +1,4 @@
-# Fact-Checking with Relation Extraction using Node Embeddings of Dependency Trees
-
-From the technical report: [Beyond Claim Matching: Fact-Checking Novel Claims Using Relation Extraction]()
+# REMOD: Relation Extraction for Modeling Online Discourse
 
 The following are the instructions to strictly reproduce the results cited in the paper.
 

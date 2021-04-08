@@ -1,6 +1,6 @@
 # REMOD: Relation Extraction for Modeling Online Discourse
 
-The following are the instructions to strictly reproduce the results cited in the paper.
+The following are the instructions to strictly reproduce the results cited in [this paper](https://arxiv.org/abs/2102.11105).
 
 ![Pipeline](figs/pipeline.png)
 
